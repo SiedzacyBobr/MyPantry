@@ -1,7 +1,15 @@
 import tkinter as tk
 from tkinter import ttk, N, S, NS, CENTER
 
-#głowe okno "Main window"
+import tkinter.font as font
+
+try:
+    from ctypes import windll
+    windll.shcore.SetProcessDpiAwareness(1)
+except:
+    pass
+
+#główne okno "Main window"
 
 class MainPantryWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -10,22 +18,26 @@ class MainPantryWindow(tk.Tk):
 
         self.title("Domowa Spiżarnia")
 
-        self.body_pantry = ttk.Frame(self)
-        self.body_pantry.grid(column=0, row=0)
+        self.body_pantry = ttk.Frame(self, borderwidth=1, relief='solid')
+        self.body_pantry.pack(side="top", fill="both", expand=True)
 
-        self.hello_usel = ttk.Label(self.body_pantry, text="Witaj użytkowniku, ten program pomoże ci \n zapanować na twoją domową spiżarnią.")
-        self.hello_usel.grid(column=0, row=0)
+        font.nametofont("TkDefaultFont").config(size=12)
+
+        self.hello_usel = ttk.Label(self.body_pantry, text="Witaj użytkowniku, ten program pomoże ci \n zapanować nad twoją domową spiżarnią.", padding=(10,10))
+        self.hello_usel.pack()
 
         # pojedyncze obszary głownego okna
 
-        area_shelves = PantryShelves(self, padding=(10,10))
-        area_shelves.grid(column=0, row=1)
+        area_Ingredient = IngradientsList(self, padding=(10, 10), borderwidth=1, relief='solid')
+        area_Ingredient.pack(side="right", fill="both", expand=True)
 
-        area_shopping = ShoppingList(self, padding=(10,10))
-        area_shopping.grid(column=0, row=2)
+        area_shelves = PantryShelves(self, padding=(10,10), borderwidth=1, relief='solid')
+        area_shelves.pack(side="top", fill="both", expand=True)
 
-        area_Ingredient = IngradientsList(self, padding=(10,10))
-        area_Ingredient.grid(column=1, row=1, rowspan=2,)
+        area_shopping = ShoppingList(self, padding=(10,10), borderwidth=1, relief='solid')
+        area_shopping.pack(side="top", fill="both", expand=True)
+
+
 
 
 
@@ -36,7 +48,7 @@ class PantryShelves(ttk.Frame):
         self.product = ttk.Frame(self)
         self.product.grid()
 
-        self.shelf = ttk.Label(self.product, text="Testowanie położenia kontenora z zawartością \n pułek spiżarni", background="Yellow")
+        self.shelf = ttk.Label(self.product, text="Testowanie położenia kontenera z zawartością \n półek spiżarni", background="Yellow")
         self.shelf.grid(column=0, columnspan=6, row=0, sticky="EW")
 
         self.to_the_garage = ttk.Button(self.product, text="do gara \n ==> ")
@@ -193,7 +205,13 @@ class IngradientsList(ttk.Frame):
         self.recipe_diner.pack()
 
         self.component = ttk.Label(self.recipe_diner, text="Test położenia \n kontenera z przepisem na obiad", background="lightblue")
-        self.component.pack()
+        self.component.pack(side="top")
+
+        self.lista = ttk.Label(self.recipe_diner, text="kukurydza \n groszek \n kasza \n")
+        self.lista.pack(side="top")
+
+        self.buttom_ingra = ttk.Button(self.recipe_diner, text="potwierdzam")
+        self.buttom_ingra.pack(side="bottom", fill="x", expand=True, anchor="s")
 
 
 
