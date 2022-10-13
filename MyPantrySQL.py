@@ -34,8 +34,13 @@ class MyPantry(Base):
     def __repr__(self):
         return self.name_product
 
-producty = session.query(MyPantry).get(1)
-print(producty)
 
-result = db.execute(select.select(MyPantry))
-print(result.fetchall())
+wynik = session.execute("select name_product from products_items WHERE id=2")
+wynik_dvzialania = wynik.fetchall()
+# wynik_dvzialania = wynik.fetchone()
+
+print(wynik)
+print(wynik_dvzialania)
+
+for x in wynik_dvzialania:
+    print(x)
