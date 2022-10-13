@@ -1,5 +1,48 @@
 import tkinter as tk
 from tkinter import ttk, N, S, NS, CENTER
+from sqlalchemy import create_engine
+from sqlalchemy import Column, String, Integer
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+path_to_host = "lokalhost_entry.txt"
+path = open(path_to_host, "r")
+dane = path.read(71)
+
+db = create_engine(f'{dane}')
+Base = declarative_base()
+Session = sessionmaker(bind=db)
+session = Session()
+
+
+class MyPantry(Base):
+    __tablename__ = "products_items"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name_product = Column(String(50), nullable=False)
+    unit_of_measure = Column(String(10))
+    quantity = Column(Integer)
+    seftystock = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return self.name_product
+
+
+producty = session.query(MyPantry).all()
+print(producty)
+
+# try:
+#     with connect(host="localhost", user="root", password="PracaZPythonem38!", database="mypantry") as conn:
+#         print(conn)
+#         cursor = conn.cursor()
+#         cursor.execute("SELECT * FROM products_items")
+#         result = cursor.fetchall()
+#         for row in result:
+#             print(*row)
+#
+# except Error as e:
+#     print(e)
+
 
 import tkinter.font as font
 
@@ -10,6 +53,8 @@ except:
     pass
 
 #główne okno "Main window"
+
+
 
 class MainPantryWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -58,7 +103,7 @@ class PantryShelves(ttk.Frame):
 # zawartość półek
 
         #kukudza
-        self.corn = ttk.Label(self.product, text="kukurydza",)
+        self.corn = ttk.Label(self.product, text=session.query(MyPantry).get(1),)
         self.corn.grid(column=0, row=1)
 
         self.status_corn = tk.IntVar(value=0)
@@ -82,7 +127,7 @@ class PantryShelves(ttk.Frame):
 
 
         #groszek
-        self.beens = ttk.Label(self.product, text="kroszek",)
+        self.beens = ttk.Label(self.product, text=session.query(MyPantry).get(2),)
         self.beens.grid(column=0, row=2)
 
         self.status_beens = tk.IntVar(value=0)
@@ -103,7 +148,7 @@ class PantryShelves(ttk.Frame):
         self.spin_beens.grid(column=2, row=2)
 
         #kasza
-        self.groats = ttk.Label(self.product, text="Kasza",)
+        self.groats = ttk.Label(self.product, text=session.query(MyPantry).get(3),)
         self.groats.grid(column=0, row=3)
 
         self.status_groats = tk.IntVar(value=0)
