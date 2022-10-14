@@ -10,7 +10,7 @@ path = open("lokalhost_entry.txt", "r")
 pass_path = path.read()
 print(pass_path)
 
-mydb = mysql.connector.connect(pass_path)
+mydb = mysql.connector.connect()
 
 my_cursor = mydb.cursor()
 
