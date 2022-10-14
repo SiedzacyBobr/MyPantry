@@ -1,11 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, N, S, NS, CENTER
-import MyPantrySQL
-from sqlalchemy.orm import sessionmaker
 
-
-Session = sessionmaker(bind=MyPantrySQL.db)
-session = Session()
 
 
 import tkinter.font as font
@@ -61,8 +56,9 @@ class PantryShelves(ttk.Frame):
 
 # zawartość półek
 
+
         #kukudza
-        self.corn = ttk.Label(self.product, text=session.query(MyPantrySQL.MyPantry).get(1))
+        self.corn = ttk.Label(self.product, text="kukurydza")
         self.corn.grid(column=0, row=1)
 
         self.status_corn = tk.IntVar(value=0)
@@ -86,7 +82,7 @@ class PantryShelves(ttk.Frame):
 
 
         #groszek
-        self.beens = ttk.Label(self.product, text=session.query(MyPantrySQL.MyPantry).get(2),)
+        self.beens = ttk.Label(self.product, text="TEST")
         self.beens.grid(column=0, row=2)
 
         self.status_beens = tk.IntVar(value=0)
@@ -107,7 +103,7 @@ class PantryShelves(ttk.Frame):
         self.spin_beens.grid(column=2, row=2)
 
         #kasza
-        self.groats = ttk.Label(self.product, text=session.query(MyPantrySQL.MyPantry).get(3),)
+        self.groats = ttk.Label(self.product, text="TEST",)
         self.groats.grid(column=0, row=3)
 
         self.status_groats = tk.IntVar(value=0)
