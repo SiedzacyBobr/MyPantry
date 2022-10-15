@@ -1,7 +1,20 @@
 import tkinter as tk
 from tkinter import ttk, N, S, NS, CENTER
+import mysql.connector
+
+mydb = mysql.connector.connect()
+my_cursor = mydb.cursor()
+
+my_cursor.execute("select * from mypantry.products_items")
+wszystko = my_cursor.fetchall()
 
 
+# def to_the_garage(id, index):
+#     where_is = id
+#     result2 = my_cursor.execute(f"select quantity from mypantry.products_items where id = {where_is}")
+#     result2 = my_cursor.fetchall()
+#     print(where_is)
+#     print(result2)
 
 import tkinter.font as font
 
@@ -44,85 +57,56 @@ class PantryShelves(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
 
+        def edit_qty(id, index):
+            pass
+
+
         self.product = ttk.Frame(self)
         self.product.grid()
 
         self.shelf = ttk.Label(self.product, text="Testowanie położenia kontenera z zawartością \n półek spiżarni", background="Yellow")
         self.shelf.grid(column=0, columnspan=6, row=0, sticky="EW")
 
-        self.to_the_garage = ttk.Button(self.product, text="do gara \n ==> ")
-        self.to_the_garage.grid(column=5, row=1, rowspan=4, sticky="SN")
 
+        #Wyświetlanie zawartości bazy danych:
 
-# zawartość półek
+        num1 = 1
+        for x in wszystko:
 
+            self.article = ttk.Label(self.product, text=x[1])
+            self.article.grid(column=0, row=num1)
+            num1 += 1
 
-        #kukudza
-        self.corn = ttk.Label(self.product, text="kukurydza")
-        self.corn.grid(column=0, row=1)
-
-        self.status_corn = tk.IntVar(value=0)
-        self.corn_quantitiative_status = ttk.Label(
-            self.product,
-            textvariable=self.status_corn,
-        )
-        self.corn_quantitiative_status.grid(column=1, row=1)
+        num3 = 1
+        for x in wszystko:
+            self.article_status = ttk.Label(self.product, text=x[3],)
+            self.article_status.grid(column=1, row=num3)
+            num3 += 1
 
         #okno spin kukurydza
-        self.quantity_corn = tk.IntVar(value=0)
-        self.spin_corn = tk.Spinbox(
-            self.product,
-            from_=0,
-            to=30,
-            textvariable=self.quantity_corn,
-            wrap=False
-        )
-        self.spin_corn.grid(column=2, row=1)
+        num2 = 1
+        for index, x in enumerate(wszystko):
+            index +=1
+            id_reference = x[0]
+            self.new_quantity_article = tk.IntVar(value=0,)
+            self.spin_corn = tk.Spinbox(
+                self.product,
+                from_=0,
+                to=30,
+                textvariable=self.new_quantity_article,
+                wrap=False,
+            )
+            self.spin_corn.grid(column=2, row=num2)
+            num2 +=1
 
+        #przycist wysyłający dowary do gara
 
-
-        #groszek
-        self.beens = ttk.Label(self.product, text="TEST")
-        self.beens.grid(column=0, row=2)
-
-        self.status_beens = tk.IntVar(value=0)
-        self.beens_quantitiative_status = ttk.Label(
-            self.product,
-            textvariable=self.status_beens,
-        )
-        self.beens_quantitiative_status.grid(column=1, row=2)
-
-        self.quantity_beens = tk.IntVar(value=0)
-        self.spin_beens = tk.Spinbox(
-            self.product,
-            from_=0,
-            to=30,
-            textvariable=self.quantity_beens,
-            wrap=False
-        )
-        self.spin_beens.grid(column=2, row=2)
-
-        #kasza
-        self.groats = ttk.Label(self.product, text="TEST",)
-        self.groats.grid(column=0, row=3)
-
-        self.status_groats = tk.IntVar(value=0)
-        self.groats_quantitiative_status = ttk.Label(
-            self.product,
-            textvariable=self.status_groats,
-        )
-        self.groats_quantitiative_status.grid(column=1, row=3)
-
-        self.quantity_groats = tk.IntVar(value=0)
-        self.spin_groats = tk.Spinbox(
-            self.product,
-            from_=0,
-            to=30,
-            textvariable=self.quantity_groats,
-            wrap=False
-        )
-        self.spin_groats.grid(column=2, row=3)
-
+        num4 = 1
+        for index, x in enumerate(wszystko):
+            id_reference = str(x[3])
+            self.to_the_garage = ttk.Button(self.product, text=f"ID {x[0]} do gara \n ==> ", command=lambda : edit_qty(id_reference, index))
+            self.to_the_garage.grid(column=5, row=num4, sticky="SN")
+            num4 += 1
 
 class ShoppingList(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
