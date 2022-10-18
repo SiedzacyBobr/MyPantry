@@ -18,6 +18,7 @@ except:
 
 #================================================ główne okno "Main window" ============================================
 
+
 class MainPantryWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,6 +46,7 @@ class MainPantryWindow(tk.Tk):
         area_shopping.pack(side="top", fill="both", expand=True)
 
 #=============================================== Okno stanu spużarni ===================================================
+
 
 class PantryShelves(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
@@ -125,10 +127,6 @@ class PantryShelves(ttk.Frame):
         self.name_wszystko_measure = [ttk.Label(self.product, text=f'{namas}') for namas in self.name_wszystko]
 
 
-
-        # for index, x in enumerate(self.to_the_garage):
-        #     print(index,x)
-
         # funkcja dla przycisków
 
         def to_the_garage_list(name, quty):
@@ -146,19 +144,17 @@ class PantryShelves(ttk.Frame):
 
         num4 = 2
         for x in range(len(self.spin_qty)):
-            # print(f' to jest lista spinów dla okna {x}')
             self.spin_qty[x].grid(column=3, row=num4)
             num4 += 1
 
         num2 = 2
         for x in range(len(self.to_the_garage)):
-            # print(f' to jest lista przycisków dla {self.to_the_garage[x]}')
             self.to_the_garage[x].grid(column=4, row=num2,)
             self.to_the_garage[x].configure(command= to_the_garage_list( self.name_wszystko_measure[x]['text'], self.spin_qty[x]['textvariable']))
             num2 +=1
 
-#self.name_wszystko_measure[x]['text'], self.spin_qty[x]['textvariable']
 #=========================================== Okno Lista zakupów ========================================================
+
 
 class ShoppingList(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
@@ -199,8 +195,6 @@ class ShoppingList(ttk.Frame):
         for index, x in enumerate(wszystko):
             index +=1
 
-            # print(index, x)
-
             if x[3] < x[4]:
 
                 self.chack_button = ttk.Checkbutton(self.shop_list, text="kupione?", variable=self.czy_kupione, onvalue="on", offvalue='off')
@@ -226,6 +220,8 @@ class ShoppingList(ttk.Frame):
         self.action_buttom = ttk.Button(self.shop_list, text="Kupione", command=drukowanie_listy_zrealizowanej)
         self.action_buttom.grid(column=0, columnspan=6, row=50, sticky="EW")
 
+#=========================================== Okno Lista produktów do gara===============================================
+
 
 class IngradientsList(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
@@ -242,9 +238,6 @@ class IngradientsList(ttk.Frame):
 
         self.buttom_ingra = ttk.Button(self.recipe_diner, text="potwierdzam")
         self.buttom_ingra.pack(side="bottom", fill="x", expand=True, anchor="s")
-
-
-
 
 
 if __name__ == '__main__':
