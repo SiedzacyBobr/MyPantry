@@ -66,10 +66,10 @@ clear_filds_buttom.grid(row=5, column=2, padx=15, pady=15)
 my_cursor.execute("select name_product from mypantry.products_items where id = 4")
 result = my_cursor.fetchall()
 
-print(result)
-
-for x in result:
-    print(x)
+# print(result)
+#
+# for x in result:
+#     print(x)
 
 
 root.mainloop()
