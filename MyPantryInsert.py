@@ -1,16 +1,13 @@
 from tkinter import *
 from tkinter import ttk, N, S, NS, CENTER
 import mysql.connector
+from lokalhost_entry import passwd, user_pantry
 
 root = Tk()
 root.title("test bazy danych")
 root.geometry("400x215")
 
-path = open("lokalhost_entry.txt", "r")
-pass_path = path.read()
-print(pass_path)
-
-mydb = mysql.connector.connect()
+mydb = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 
 my_cursor = mydb.cursor()
 

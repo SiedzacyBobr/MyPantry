@@ -1,12 +1,14 @@
 import tkinter as tk
 from tkinter import ttk, N, S, NS, CENTER
 import mysql.connector
+from lokalhost_entry import passwd, user_pantry
 
-mydb = mysql.connector.connect()
-my_cursor = mydb.cursor()
 
-my_cursor.execute("select * from mypantry.products_items")
-wszystko = my_cursor.fetchall()
+pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
+pantry_cursor = pantry_db.cursor()
+
+pantry_cursor.execute("select * from mypantry.products_items")
+all_db_pantry = pantry_cursor.fetchall()
 
 import tkinter.font as font
 
@@ -78,28 +80,28 @@ class PantryShelves(ttk.Frame):
         self.fourth_kolumn = ttk.Label(self.product, text="do poprania", background="orange", borderwidth=1, relief='solid')
         self.fourth_kolumn.grid(column=3, row=1, sticky="EW")
 
-        self.fifth_kolumn = ttk.Label(self.product, text="przycisk", background="orange", borderwidth=1, relief='solid')
-        self.fifth_kolumn.grid(column=4, row=1, sticky="EW")
+        # self.fifth_kolumn = ttk.Label(self.product, text="przycisk", background="orange", borderwidth=1, relief='solid')
+        # self.fifth_kolumn.grid(column=4, row=1, sticky="EW")
 
     #Wyświetlanie zawartości bazy danych:
 
         #nazwa produktu
         num1 = 2
-        for x in wszystko:
+        for x in all_db_pantry:
             self.article = ttk.Label(self.product, text=x[1])
             self.article.grid(column=0, row=num1)
             num1 += 1
 
         #stan ilościowy w spiżarni
         num3 = 2
-        for x in wszystko:
+        for x in all_db_pantry:
             self.article_status = ttk.Label(self.product, text=x[3],)
             self.article_status.grid(column=1, row=num3)
             num3 += 1
 
         #jednostka miary
         num5 = 2
-        for x in wszystko:
+        for x in all_db_pantry:
             self.article_unit_measure = ttk.Label(self.product, text=x[2], )
             self.article_unit_measure.grid(column=2, row=num5, padx=5)
             num5 += 1
@@ -108,37 +110,36 @@ class PantryShelves(ttk.Frame):
 
         self.len_wszystko =[]
 
-        for wszy in range(len(wszystko)):
+        for wszy in range(len(all_db_pantry)):
             self.len_wszystko.append(wszy)
 
         # print(self.len_wszystko)
 
         self.name_wszystko = []
-        for index, name in enumerate(wszystko):
+        for index, name in enumerate(all_db_pantry):
             self.name_wszystko.append(name[1] + " " + name[2])
 
-        print(self.name_wszystko)
+        # print(self.name_wszystko)
 
         # stworzenie list listy elementów, na podstawie ilości rekortów w basie danych.
 
         self.new_quantity_article = [tk.IntVar(value=0) for wszy in self.len_wszystko]
         self.spin_qty =[tk.Spinbox(self.product, from_=0, to=30, textvariable=self.new_quantity_article[wszy]) for wszy in self.len_wszystko]
-        self.to_the_garage = [tk.Button(self.product, text=f'{wszy} ==>') for wszy in self.len_wszystko]
+        # self.to_the_garage = [tk.Button(self.product, text=f'{wszy} ==>') for wszy in self.len_wszystko]
         self.name_wszystko_measure = [ttk.Label(self.product, text=f'{namas}') for namas in self.name_wszystko]
-
 
         # funkcja dla przycisków
 
-        def to_the_garage_list(name, quty):
-            def f():
-                pokazowa_labelka_ile = ttk.Label(self.product, text="")
-                pokazowa_labelka_ile.config(text=name)
-                pokazowa_labelka_ile.grid(column=2)
-                pokazowa_labelka_name = ttk.Label(self.product, text="")
-                pokazowa_labelka_name.config(textvariable=quty)
-                pokazowa_labelka_name.grid(column=1)
-
-            return f
+        # def to_the_garage_list(name, quty):
+        #     def f():
+        #         pokazowa_labelka_ile = ttk.Label(self.product, text="")
+        #         pokazowa_labelka_ile.config(text=name)
+        #         pokazowa_labelka_ile.grid(column=2)
+        #         pokazowa_labelka_name = ttk.Label(self.product, text="")
+        #         pokazowa_labelka_name.config(textvariable=quty)
+        #         pokazowa_labelka_name.grid(column=1)
+        #
+        #     return f
 
         # stworzenie elementow do wyświetlenia na eklanie gdzie każdy elemnet jest indexowany.
 
@@ -147,11 +148,36 @@ class PantryShelves(ttk.Frame):
             self.spin_qty[x].grid(column=3, row=num4)
             num4 += 1
 
-        num2 = 2
-        for x in range(len(self.to_the_garage)):
-            self.to_the_garage[x].grid(column=4, row=num2,)
-            self.to_the_garage[x].configure(command= to_the_garage_list( self.name_wszystko_measure[x]['text'], self.spin_qty[x]['textvariable']))
-            num2 +=1
+        # num2 = 2
+        # for x in range(len(self.to_the_garage)):
+        #     self.to_the_garage[x].grid(column=4, row=num2,)
+        #     self.to_the_garage[x].configure(command= to_the_garage_list( self.name_wszystko_measure[x]['text'], self.spin_qty[x]['textvariable']))
+        #     num2 +=1
+
+
+        def all_list():
+            num6 =11
+            for index, x in enumerate(self.spin_qty):
+                quty = x.get()
+                if int(quty) > 0:
+
+                    quty_label_title = ttk.Label(self.product, text="ilość", background="orange")
+                    quty_label_title.grid(column=1, row=10)
+
+                    quty_name_title = ttk.Label(self.product, text="nazwa produktu", background="orange")
+                    quty_name_title.grid(column=2, row=10)
+
+
+                    quty_label = ttk.Label(self.product, text=quty)
+                    quty_label.grid(column=1, row=num6)
+                    quty_name = ttk.Label(self.product, text=(self.name_wszystko[index]))
+                    quty_name.grid(column=2, row=num6)
+
+                num6 +=1
+
+        self.one_buttom = ttk.Button(self.product, text="do gara ==>")
+        self.one_buttom.grid(columnspan=4, row=50, sticky='ew')
+        self.one_buttom.configure(command=all_list)
 
 #=========================================== Okno Lista zakupów ========================================================
 
@@ -192,7 +218,7 @@ class ShoppingList(ttk.Frame):
                 print("Dupa aktualizacja zakupów")
 
         num9 = 2
-        for index, x in enumerate(wszystko):
+        for index, x in enumerate(all_db_pantry):
             index +=1
 
             if x[3] < x[4]:
