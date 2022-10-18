@@ -233,7 +233,7 @@ class IngradientsList(ttk.Frame):
         self.component = ttk.Label(self.recipe_diner, text="Test położenia \n kontenera z przepisem na obiad", background="lightblue")
         self.component.pack(side="top")
 
-        self.lista = ttk.Label(self.recipe_diner, text="kukurydza \n groszek \n kasza \n")
+        self.lista = ttk.Label(self.recipe_diner, text="")
         self.lista.pack(side="top")
 
         self.buttom_ingra = ttk.Button(self.recipe_diner, text="potwierdzam")
