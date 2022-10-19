@@ -2,13 +2,15 @@ import tkinter as tk
 from tkinter import ttk, N, S, NS, CENTER
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
-
+from LenList import name_all_pantry, len_all_pantry
 
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
 pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
+
+print(all_db_pantry[3][3])
 
 import tkinter.font as font
 
@@ -80,9 +82,6 @@ class PantryShelves(ttk.Frame):
         self.fourth_kolumn = ttk.Label(self.product, text="do poprania", background="orange", borderwidth=1, relief='solid')
         self.fourth_kolumn.grid(column=3, row=1, sticky="EW")
 
-        # self.fifth_kolumn = ttk.Label(self.product, text="przycisk", background="orange", borderwidth=1, relief='solid')
-        # self.fifth_kolumn.grid(column=4, row=1, sticky="EW")
-
     #Wyświetlanie zawartości bazy danych:
 
         #nazwa produktu
@@ -106,40 +105,11 @@ class PantryShelves(ttk.Frame):
             self.article_unit_measure.grid(column=2, row=num5, padx=5)
             num5 += 1
 
-        # stworzenie listy odpowiadającej ilości rekordów w bazie danych.
+               # stworzenie list listy elementów, na podstawie ilości rekortów w basie danych.
 
-        self.len_wszystko =[]
-
-        for wszy in range(len(all_db_pantry)):
-            self.len_wszystko.append(wszy)
-
-        # print(self.len_wszystko)
-
-        self.name_wszystko = []
-        for index, name in enumerate(all_db_pantry):
-            self.name_wszystko.append(name[1] + " " + name[2])
-
-        # print(self.name_wszystko)
-
-        # stworzenie list listy elementów, na podstawie ilości rekortów w basie danych.
-
-        self.new_quantity_article = [tk.IntVar(value=0) for wszy in self.len_wszystko]
-        self.spin_qty =[tk.Spinbox(self.product, from_=0, to=30, textvariable=self.new_quantity_article[wszy]) for wszy in self.len_wszystko]
-        # self.to_the_garage = [tk.Button(self.product, text=f'{wszy} ==>') for wszy in self.len_wszystko]
-        self.name_wszystko_measure = [ttk.Label(self.product, text=f'{namas}') for namas in self.name_wszystko]
-
-        # funkcja dla przycisków
-
-        # def to_the_garage_list(name, quty):
-        #     def f():
-        #         pokazowa_labelka_ile = ttk.Label(self.product, text="")
-        #         pokazowa_labelka_ile.config(text=name)
-        #         pokazowa_labelka_ile.grid(column=2)
-        #         pokazowa_labelka_name = ttk.Label(self.product, text="")
-        #         pokazowa_labelka_name.config(textvariable=quty)
-        #         pokazowa_labelka_name.grid(column=1)
-        #
-        #     return f
+        self.new_quantity_article = [tk.IntVar(value=0) for wszy in len_all_pantry]
+        self.spin_qty =[tk.Spinbox(self.product, from_=0, to=30, textvariable=self.new_quantity_article[wszy]) for wszy in len_all_pantry]
+        self.name_wszystko_measure = [ttk.Label(self.product, text=f'{namas}') for namas in name_all_pantry]
 
         # stworzenie elementow do wyświetlenia na eklanie gdzie każdy elemnet jest indexowany.
 
@@ -147,13 +117,6 @@ class PantryShelves(ttk.Frame):
         for x in range(len(self.spin_qty)):
             self.spin_qty[x].grid(column=3, row=num4)
             num4 += 1
-
-        # num2 = 2
-        # for x in range(len(self.to_the_garage)):
-        #     self.to_the_garage[x].grid(column=4, row=num2,)
-        #     self.to_the_garage[x].configure(command= to_the_garage_list( self.name_wszystko_measure[x]['text'], self.spin_qty[x]['textvariable']))
-        #     num2 +=1
-
 
         def all_list():
             num6 =11
@@ -170,10 +133,17 @@ class PantryShelves(ttk.Frame):
 
                     quty_label = ttk.Label(self.product, text=quty)
                     quty_label.grid(column=1, row=num6)
-                    quty_name = ttk.Label(self.product, text=(self.name_wszystko[index]))
+                    quty_name = ttk.Label(self.product, text=(name_all_pantry[index]))
                     quty_name.grid(column=2, row=num6)
 
                 num6 +=1
+                stan = all_db_pantry[index][3]
+                new_stan = int(stan) - int(quty)
+                print(f'stan obecny magazynu: {name_all_pantry[index]}   ==> {stan}')
+                print(f'f wyciągnięto z magazynu: {name_all_pantry[index]}  ==>  {quty} ')
+                print(f' stan obecne magazynu {name_all_pantry[index]} ==> {new_stan}')
+                pantry_cursor.execute(f"update products_items set quantity = {new_stan} where id ={index+1}")
+                pantry_db.commit()
 
         self.one_buttom = ttk.Button(self.product, text="do gara ==>")
         self.one_buttom.grid(columnspan=4, row=50, sticky='ew')
@@ -186,12 +156,13 @@ class ShoppingList(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
 
-
         self.shop_list = ttk.Frame(self)
         self.shop_list.grid()
 
         self.items_products = ttk.Label(self.shop_list, text="Testowanie położenia konterena z listą zakupów", background="lightgrey")
         self.items_products.grid(column=0, columnspan= 5, row=0, sticky="EW")
+
+    # nazwy kolumn
 
         self.first_kolumn_list = ttk.Label(self.shop_list, text="Czy kupiono?", background="grey", borderwidth=1,
                                       relief='solid')
@@ -204,30 +175,28 @@ class ShoppingList(ttk.Frame):
                                       relief='solid')
         self.third_kolumn_list.grid(column=2, row=1, sticky="EW")
 
+    # funkcja dla listy zakupów
 
-        # Lista zakupów do realizacji
+    # tworzenie listy chack_botton
 
-        self.czy_kupione = tk.StringVar()
+        self.it_is_bought = [tk.IntVar(value=0) for len_n in len_all_pantry]
+        self.chack_button_list = [ttk.Checkbutton(self.shop_list, onvalue=1, offvalue=0, variable=self.it_is_bought[len_n]) for len_n in len_all_pantry]
 
-        def drukowanie_listy_zrealizowanej():
-            if self.czy_kupione.get() == "on":
-                print(self.czy_kupione.get())
-                print("hura działa zaznaczania")
-            else:
-                print(self.czy_kupione.get())
-                print("Dupa aktualizacja zakupów")
+        print(len_all_pantry)
+
+        self.spin_box_list = []
+        self.label_list = []
+
 
         num9 = 2
         for index, x in enumerate(all_db_pantry):
-            index +=1
 
             if x[3] < x[4]:
 
-                self.chack_button = ttk.Checkbutton(self.shop_list, text="kupione?", variable=self.czy_kupione, onvalue="on", offvalue='off')
-                self.chack_button.grid(column=0, row=index + num9, )
-
-                self.items_products1 = ttk.Label(self.shop_list, text=x[1], )
-                self.items_products1.grid(column=1, row=index + num9, )
+                self.items_products1 = ttk.Label(self.shop_list, text=x[1] + " -" +x[2])
+                self.items_products1.grid(column=1, row=num9)
+                self.label_list.append(index)
+                print(num9)
 
                 self.quantity_items = tk.IntVar(value=x[4]-x[3])
                 self.spin_box = tk.Spinbox(
@@ -236,15 +205,28 @@ class ShoppingList(ttk.Frame):
                     to=30,
                     textvariable=self.quantity_items,
                 )
-                self.spin_box.grid(column=2, row=index + num9)
+                self.spin_box.grid(column=2, row=num9)
+                self.spin_box_list.append(self.spin_box)
+
                 num9 +=1
             else:
-                num9 +=1
+                pass
+
+
+        print(f' to jest lista indexów dodanych labelek ; {self.label_list}')
+        print(type(self.label_list[1]))
+
+        num10 = 2
+        for x in self.label_list:
+            self.chack_button_list[x].grid(column=0, row=num10)
+            num10 +=1
 
         # przycisk potwierczający realizacja zakupów podsumowanie listy
 
-        self.action_buttom = ttk.Button(self.shop_list, text="Kupione", command=drukowanie_listy_zrealizowanej)
+        self.action_buttom = ttk.Button(self.shop_list, text="Kupione")
         self.action_buttom.grid(column=0, columnspan=6, row=50, sticky="EW")
+        self.action_buttom.configure()
+
 
 #=========================================== Okno Lista produktów do gara===============================================
 
@@ -252,6 +234,7 @@ class ShoppingList(ttk.Frame):
 class IngradientsList(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
+
 
         self.recipe_diner = ttk.Frame(self)
         self.recipe_diner.pack()
