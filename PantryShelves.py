@@ -13,7 +13,7 @@ pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
 
 class PantryShelvesClass(ttk.Frame):
-    def __init__(self, container, *args, **kwargs):
+    def __init__(self, container, *args, **kwargs,):
         super().__init__(container, *args, **kwargs)
         self.main_construct_shelves()
         self.title_contener_shelves()
@@ -22,7 +22,6 @@ class PantryShelvesClass(ttk.Frame):
         self.name_article_on_shelves()
         self.quontity_arcicle_on_shelves()
         self.unit_measure_article_on_shelves()
-        self.new_qty_spinbox()
         self.spin_qty_constract()
         self.list_of_items_and_measure_constract()
         self.list_for_ingradients()
@@ -78,11 +77,8 @@ class PantryShelvesClass(ttk.Frame):
             self.article_unit_measure.grid(column=2, row=num5, padx=5)
             num5 += 1
 
-    def new_qty_spinbox(self):
-
-        self.new_quantity_article = [tk.IntVar(value=0) for wszy in len_all_pantry]
-
     def spin_qty_constract(self):
+        self.new_quantity_article = [tk.IntVar(value=0) for wszy in len_all_pantry]
         self.spin_qty =[tk.Spinbox(self.product, from_=0, to=30, textvariable=self.new_quantity_article[wszy]) for wszy in len_all_pantry]
 
     def list_of_items_and_measure_constract(self):
@@ -98,13 +94,30 @@ class PantryShelvesClass(ttk.Frame):
     def all_list_in(self):
         print("dupa funcja z wenętrzną funkcją")
 
-        self.goladupa = ttk.Label(IngradientsList.IngradientsListClass(self).recipe_diner, text= " To jest wewnątrz uncjci")
-        self.goladupa.grid()
+        num6 = 11
+        for index, x in enumerate(self.spin_qty):
+            quty = x.get()
+            if int(quty) > 0:
+                print("działa if !!")
+
+                quty_label_title = ttk.Label(self.product, text="ilość", background="green")
+                quty_label_title.grid(column=0, row=num6)
+
+                quty_name_title = ttk.Label(self.product, text="nazwa produktu", background="green")
+                quty_name_title.grid(column=0, row=num6)
+
+                quty_label = ttk.Label(self.product, text=quty)
+                quty_label.grid(column=1, row=num6)
+
+                quty_name = ttk.Label(self.product, text=(name_all_pantry[index]))
+                quty_name.grid(column=1, row=num6)
+
+            num6 += 1
 
     def list_ingradients_approval_button(self):
 
         self.one_buttom = ttk.Button(self.product, text="do gara ==>")
         self.one_buttom.grid(columnspan=4, row=50, sticky='ew')
-        self.one_buttom.configure(command=IngradientsList.IngradientsListClass(self).all_list_out)
-        #self.one_buttom.configure(command=self.all_list_in)
+        self.one_buttom.configure(command=self.all_list_in())
+        #self.one_buttom.configure(command=IngradientsList.IngradientsListClass(self).all_list_out)
 

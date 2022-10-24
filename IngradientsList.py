@@ -11,10 +11,12 @@ pantry_cursor = pantry_db.cursor()
 pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
 
+
 class IngradientsListClass(ttk.Frame):
 
-    def __init__(self, container, *args, **kwargs):
+    def __init__(self,  container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
+
         self.main_concruct_diner()
         self.title_contener_diner_list()
         self.list_approval_button()
@@ -30,36 +32,31 @@ class IngradientsListClass(ttk.Frame):
         self.component.grid(column=0, row=0)
 
     def all_list_out(self):
-        print("dupa funcja z IngradientsList")
 
-        t = tk.Toplevel(self.recipe_diner)
-        t.wm_title("Window kacry")
+        print("ta funkcja dziala")
 
-        label_window = tk.Label(t, text="This is window prom all_list_out_method")
-        label_window.pack()
-
-        postep = ttk.Label(t, text= "Jest pastęp i to spory")
-        postep.pack()
-
-        num6 =11
-        for index, x in enumerate(PantryShelves.PantryShelvesClass(self).spin_qty):
-            quty = x.get()
-            if int(quty) > 0:
-                print("działa if !!")
-
-                quty_label_title = ttk.Label(t, text="ilość", background="green")
-                quty_label_title.pack()
-
-                quty_name_title = ttk.Label(t, text="nazwa produktu", background="green")
-                quty_name_title.pack()
+        mylabel = ttk.Label(self.recipe_diner, text="To labelka \n hura", background= "white", borderwidth=1, relief='solid', padding=(10,10,10,10))
+        mylabel.grid(sticky="ew")
 
 
-                quty_label = ttk.Label(t, text=quty)
-                quty_label.pack()
-                quty_name = ttk.Label(t, text=(name_all_pantry[index]))
-                quty_name.pack()
+        # print("dupa funcja z IngradientsList")
+        #
+        # t = tk.Toplevel(self.recipe_diner)
+        # t.wm_title("Window kacry")
+        #
+        # label_window = tk.Label(t, text="This is window prom all_list_out_method")
+        # label_window.grid()
+        #
+        # self.pantr_spin_qty = (PantryShelves.PantryShelvesClass(self).spin_qty)
+        #
+        # for index, x in enumerate(self.pantr_spin_qty):
+        #     quta = x.get()
+        #     print(quta)
+        #
+        # postep = ttk.Label(t, text= "Jest pastęp i to spory")
+        # postep.grid()
 
-            num6 +=1
+
 
     def db_pantry_update(self):
         pass
