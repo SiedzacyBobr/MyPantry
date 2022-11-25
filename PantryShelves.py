@@ -3,8 +3,7 @@ from tkinter import ttk, N, S, NS, CENTER
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from LenList import name_all_pantry, len_all_pantry
-import IngradientsList
-import main
+
 
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
@@ -12,9 +11,12 @@ pantry_cursor = pantry_db.cursor()
 pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
 
+lista_do_przepisu = {}
+
 class PantryShelvesClass(ttk.Frame):
     def __init__(self, container, *args, **kwargs,):
         super().__init__(container, *args, **kwargs)
+
         self.main_construct_shelves()
         self.title_contener_shelves()
         self.scroll_list_shelves()
@@ -91,33 +93,34 @@ class PantryShelvesClass(ttk.Frame):
             self.spin_qty[x].grid(column=3, row=num4)
             num4 += 1
 
-    def all_list_in(self):
-        print("dupa funcja z wenętrzną funkcją")
+    def all_list_in_tab_product(self):
+        print("Działa inicjalizacjka funkcja all_list_in_tab_product - jeśli warunk jest spełniony wyświetli się lista")
 
-        num6 = 11
+
+        #num6 = 16
         for index, x in enumerate(self.spin_qty):
             quty = x.get()
-            if int(quty) > 0:
-                print("działa if !!")
+            if int(quty) >= 0:
+                lista_do_przepisu[name_all_pantry[index]] = quty
+                print(f"zmieniona wartosć dla {name_all_pantry[index]} o wartość {quty}")
 
-                quty_label_title = ttk.Label(self.product, text="ilość", background="green")
-                quty_label_title.grid(column=0, row=num6)
+        else:
+            print("Działa cała funkcja all_list_in i nastąpiło podsumowanie")
+            potwierdzenie = ttk.Label(self.product, text=f'Lista została utworzona')
+            potwierdzenie.grid(columnspan=4,row=51, sticky="ew")
 
-                quty_name_title = ttk.Label(self.product, text="nazwa produktu", background="green")
-                quty_name_title.grid(column=0, row=num6)
+            print(lista_do_przepisu)
+            return lista_do_przepisu
 
-                quty_label = ttk.Label(self.product, text=quty)
-                quty_label.grid(column=1, row=num6)
-
-                quty_name = ttk.Label(self.product, text=(name_all_pantry[index]))
-                quty_name.grid(column=1, row=num6)
-
-            num6 += 1
+    def sprawdzenie_listy(self):
+        print("funkcja działa")
+        print(f'W słowniku jest {lista_do_przepisu}')
 
     def list_ingradients_approval_button(self):
 
-        self.one_buttom = ttk.Button(self.product, text="do gara ==>")
+        self.one_buttom = ttk.Button(self.product, text="utwórz liste")
         self.one_buttom.grid(columnspan=4, row=50, sticky='ew')
-        self.one_buttom.configure(command=self.all_list_in())
-        #self.one_buttom.configure(command=IngradientsList.IngradientsListClass(self).all_list_out)
+        self.one_buttom.configure(command=self.all_list_in_tab_product)
+
+
 

@@ -16,4 +16,4 @@ for i in range(len(all_db_pantry)):
 name_all_pantry = []
 
 for index, name in enumerate(all_db_pantry):
-    name_all_pantry.append(name[1] + " -" + name[2])
+    name_all_pantry.append(name[1])

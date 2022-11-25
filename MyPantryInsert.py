@@ -24,7 +24,6 @@ def insert_product():
     mydb.commit()
     clear_filed()
 
-
 title_label = Label(root, text="Baza danych produktów")
 title_label.grid(row=0, column=1, padx=5, pady=25)
 
