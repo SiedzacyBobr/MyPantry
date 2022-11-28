@@ -1,10 +1,11 @@
 .idea/
 Inwentaryzacja_zywnosci.drawio
-lokalhost_entry.txt
+lokalhost_entry.py
 __pycache__/
 .$Inwentaryzacja_zywnosci.drawio.dtmp
-test.py
+.$Inwentaryzacja_zywnosci.drawio.pkb
 .$Inwentaryzacja_zywnosci.drawio.bkp
-lokalhost_entry.py
+test.py
 test_2.py
 test3.py
+

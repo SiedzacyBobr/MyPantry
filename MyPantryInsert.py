@@ -1,16 +1,13 @@
 from tkinter import *
 from tkinter import ttk, N, S, NS, CENTER
 import mysql.connector
+from lokalhost_entry import passwd, user_pantry
 
 root = Tk()
 root.title("test bazy danych")
 root.geometry("400x215")
 
-path = open("lokalhost_entry.txt", "r")
-pass_path = path.read()
-print(pass_path)
-
-mydb = mysql.connector.connect()
+mydb = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 
 my_cursor = mydb.cursor()
 
@@ -26,7 +23,6 @@ def insert_product():
     my_cursor.execute(sql_command, values)
     mydb.commit()
     clear_filed()
-
 
 title_label = Label(root, text="Baza danych produktów")
 title_label.grid(row=0, column=1, padx=5, pady=25)
@@ -65,11 +61,6 @@ clear_filds_buttom.grid(row=5, column=2, padx=15, pady=15)
 
 my_cursor.execute("select name_product from mypantry.products_items where id = 4")
 result = my_cursor.fetchall()
-
-# print(result)
-#
-# for x in result:
-#     print(x)
 
 
 root.mainloop()
