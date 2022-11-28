@@ -4,12 +4,20 @@ import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from LenList import name_all_pantry, len_all_pantry
 
+
+# dostęp do bazy danych
+
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
 pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
 
+# zmienne globalne
+
+schoping_list = {}
+list_chack_box_botton = {}
+list_spin_box_botton = {}
 
 class ShoppingList(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
@@ -17,9 +25,8 @@ class ShoppingList(ttk.Frame):
         self.main_construct_shopping()
         self.title_contener_shopping_lis()
         self.name_column_shopping_list()
-        self.list_of_items_for_shopping()
-        self.chack_button_constract()
-        self.list_shopping_approval_button()
+        self.chack_button_end_spin_box_constract()
+        self.selection_list_approval_button()
 
     def main_construct_shopping(self):
 
@@ -37,55 +44,110 @@ class ShoppingList(ttk.Frame):
                                       relief='solid')
         self.first_kolumn_list.grid(column=0, row=1, sticky="EW")
 
-        self.second_kolumn_list = ttk.Label(self.shop_list, text="Nazwa produktu", background="gray", borderwidth=1, relief='solid')
+        self.second_kolumn_list = ttk.Label(self.shop_list, text="Nazwa produktu i jednostka", background="gray", borderwidth=1, relief='solid')
         self.second_kolumn_list.grid(column=1, row=1, sticky="EW")
 
         self.third_kolumn_list = ttk.Label(self.shop_list, text="Ilość", background="gray", borderwidth=1,
                                       relief='solid')
         self.third_kolumn_list.grid(column=2, row=1, sticky="EW")
 
-    def list_of_items_for_shopping(self):
-        self.spin_box_list = []
-        self.label_list = []
+    def chack_button_end_spin_box_constract(self):
 
-        num9 = 2
+# tworzenie ekranu w pętli
+
+        num10 = 25
         for index, x in enumerate(all_db_pantry):
 
-            if x[3] < x[4]:
+            self.name_product = x[1]
 
-                self.items_products1 = ttk.Label(self.shop_list, text=x[1] + " -" +x[2])
-                self.items_products1.grid(column=1, row=num9)
+# tworzenie checkbotton
 
-                self.label_list.append(index)
+            self.selected_option = tk.IntVar(value=None)
+            self.testing_chack_buttom = ttk.Checkbutton(self.shop_list,
+                                                    variable=self.selected_option,
+                                                    onvalue=1,
+                                                    offvalue=0,
+                                                    text=self.name_product
+                                                    )
 
-                self.quantity_items = tk.IntVar(value=x[4]-x[3])
-                self.spin_box = tk.Spinbox(
-                    self.shop_list,
-                    from_=0,
-                    to=30,
-                    textvariable=self.quantity_items,
+
+            if x[4] > x[3]:
+                self.testing_chack_buttom.grid(column=0, row=num10)
+
+            list_chack_box_botton[self.name_product] = self.selected_option
+
+
+
+# tworzenie spin boxa
+
+            self.quantity_items = tk.IntVar(value=x[4] - x[3])
+            self.spin_box = tk.Spinbox(
+                self.shop_list,
+                from_=0,
+                to=30,
+                textvariable=self.quantity_items,
                 )
-                self.spin_box.grid(column=2, row=num9)
-                self.spin_box_list.append(self.spin_box)
 
-                num9 +=1
-            else:
-                pass
+            if x[4] > x[3]:
+                self.spin_box.grid(column=2, row=num10)
 
-    def chack_button_constract(self):
+            list_spin_box_botton[x[1]] = self.quantity_items
 
-        self.it_is_bought = [tk.IntVar(value=0) for len_n in len_all_pantry]
-        self.chack_button_list = [
-            ttk.Checkbutton(self.shop_list, onvalue=1, offvalue=0, variable=self.it_is_bought[len_n]) for len_n in
-            len_all_pantry]
-
-        num10 = 2
-        for x in self.label_list:
-            self.chack_button_list[x].grid(column=0, row=num10)
             num10 +=1
 
-    def list_shopping_approval_button(self):
 
-        self.action_buttom = ttk.Button(self.shop_list, text="Kupione")
-        self.action_buttom.grid(column=0, columnspan=6, row=50, sticky="EW")
-        self.action_buttom.configure()
+    def chack_box_print_list(self):
+
+# tworzenie labelki z informacją że zmiana została dokonana w bazie danych.
+
+        mylabel = ttk.Label(self.shop_list, text="Lista została zrealizowania i dodana do spiżarni")
+        mylabel.grid()
+
+# tworzenie listy nazwa wartość
+
+        for nazwa, wartosc in list_chack_box_botton.items():
+            self.selected_op = wartosc.get()
+            list_chack_box_botton[nazwa] = self.selected_op
+
+        for nazwa, wartosc in list_spin_box_botton.items():
+            self.selected_sp = wartosc.get()
+            list_spin_box_botton[nazwa] = self.selected_sp
+
+# tworzenie listy nazwa wartość
+
+        self.shoping_index = 0
+        for nazwa_s, wartosc_s in list_chack_box_botton.items():
+
+            if wartosc_s == 1 and nazwa_s in list_spin_box_botton:
+
+                print(f'spełniony warunek dla {nazwa_s} i wartości {wartosc_s}')
+
+                self.ilosc = list_spin_box_botton[nazwa_s]
+
+                if self.ilosc > 0:
+
+                    print(f"Kupiono {nazwa_s} ilość {self.ilosc}")
+
+                    schoping_list[nazwa_s] = self.ilosc
+
+                    self.stan_s = all_db_pantry[self.shoping_index][3]
+                    self.new_stan_s = int(self.stan_s) + int(self.ilosc)
+
+                    pantry_cursor.execute(
+                        f"update products_items set quantity = {self.new_stan_s} where id ={self.shoping_index + 1}")
+                    pantry_db.commit()
+
+                    self.shoping_index += 1
+            else:
+                self.shoping_index += 1
+                print(f"warunek nie spełniony dla {nazwa_s}")
+
+
+        print(schoping_list)
+
+
+    def selection_list_approval_button(self):
+
+        self.action_buttom = ttk.Button(self.shop_list, text="selecektywny wybór przez chackbox")
+        self.action_buttom.grid(column=0, columnspan=6, row=51, sticky="EW")
+        self.action_buttom.configure(command=self.chack_box_print_list)

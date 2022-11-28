@@ -69,26 +69,29 @@ class IngradientsListClass(ttk.Frame):
         print("up date DB")
         print(len_all_pantry)
         print(name_all_pantry)
+        print(lista_do_przepisu)
 
-        for x in len_all_pantry:
-            print(x)
+        self.test_index = 0
+        for klucz, wartosc in lista_do_przepisu.items():
 
 
-        # for x, y in lista_do_przepisu.items():
-        #
-        #     if y != "0":
-        #         print(f"zmiana o {y}")
-        #         print(f"dla towaru {x}")
+            if wartosc != "0":
+                print(f"produkt {klucz} o indeksie {self.test_index} zostaje zmieniony o {wartosc} szt. ")
 
-            # self.stan = all_db_pantry[x[3]]
-            # print(f"stana magazynu {self.stan}")
-            # print(self.stan)
-            # self.new_stan = int(self.stan) - int(y)
-            # print(f'stan obecny magazynu: {all_db_pantry[x][3]}   ==> {[y]}')
-            # print(f'f wyciągnięto z magazynu: {lista_do_przepisu[x]}  ==>  {y} ')
-        # print(f' stan obecne magazynu {name_all_pantry[index]} ==> {new_stan}')
-        # pantry_cursor.execute(f"update products_items set quantity = {new_stan} where id ={index+1}")
-        # pantry_db.commit()
+                self.stan = all_db_pantry[self.test_index][3]
+                print(self.stan)
+                self.new_stan = int(self.stan) - int(wartosc)
+                print(self.new_stan)
+                pantry_cursor.execute(f"update products_items set quantity = {self.new_stan} where id ={self.test_index+1}")
+                pantry_db.commit()
+
+                self.test_index += 1
+
+            else:
+                self.test_index += 1
+
+
+
 
 
     def list_approval_button(self):

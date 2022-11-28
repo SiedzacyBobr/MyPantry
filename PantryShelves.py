@@ -81,10 +81,16 @@ class PantryShelvesClass(ttk.Frame):
 
     def spin_qty_constract(self):
         self.new_quantity_article = [tk.IntVar(value=0) for wszy in len_all_pantry]
-        self.spin_qty =[tk.Spinbox(self.product, from_=0, to=30, textvariable=self.new_quantity_article[wszy]) for wszy in len_all_pantry]
+        self.spin_qty =[tk.Spinbox(
+            self.product,
+            from_=0,
+            to=30,
+            textvariable=self.new_quantity_article[wszy]) for wszy in len_all_pantry]
 
     def list_of_items_and_measure_constract(self):
-        self.name_wszystko_measure = [ttk.Label(self.product, text=f'{namas}') for namas in name_all_pantry]
+        self.name_wszystko_measure = [ttk.Label(
+            self.product,
+            text=f'{namas}') for namas in name_all_pantry]
 
     def list_for_ingradients(self):  # stworzenie elementow do wyświetlenia na eklanie gdzie każdy elemnet jest indexowany.
 
