@@ -105,42 +105,42 @@ class ShoppingList(ttk.Frame):
 
 # tworzenie listy nazwa wartość
 
-        for nazwa, wartosc in list_chack_box_botton.items():
-            self.selected_op = wartosc.get()
-            list_chack_box_botton[nazwa] = self.selected_op
+        for name, value in list_chack_box_botton.items():
+            self.selected_op = value.get()
+            list_chack_box_botton[name] = self.selected_op
 
-        for nazwa, wartosc in list_spin_box_botton.items():
-            self.selected_sp = wartosc.get()
-            list_spin_box_botton[nazwa] = self.selected_sp
+        for name, value in list_spin_box_botton.items():
+            self.selected_sp = value.get()
+            list_spin_box_botton[name] = self.selected_sp
 
 # tworzenie listy nazwa wartość
 
         self.shoping_index = 0
-        for nazwa_s, wartosc_s in list_chack_box_botton.items():
+        for name_s, volue_s in list_chack_box_botton.items():
 
-            if wartosc_s == 1 and nazwa_s in list_spin_box_botton:
+            if volue_s == 1 and name_s in list_spin_box_botton:
 
-                print(f'spełniony warunek dla {nazwa_s} i wartości {wartosc_s}')
+                print(f'spełniony warunek dla {name_s} i wartości {volue_s}')
 
-                self.ilosc = list_spin_box_botton[nazwa_s]
+                self.guantity_s = list_spin_box_botton[name_s]
 
-                if self.ilosc > 0:
+                if self.guantity_s > 0:
 
-                    print(f"Kupiono {nazwa_s} ilość {self.ilosc}")
+                    print(f"Kupiono {name_s} ilość {self.guantity_s}")
 
-                    schoping_list[nazwa_s] = self.ilosc
+                    schoping_list[name_s] = self.guantity_s
 
-                    self.stan_s = all_db_pantry[self.shoping_index][3]
-                    self.new_stan_s = int(self.stan_s) + int(self.ilosc)
+                    self.state_s = all_db_pantry[self.shoping_index][3]
+                    self.new_state_s = int(self.state_s) + int(self.guantity_s)
 
                     pantry_cursor.execute(
-                        f"update products_items set quantity = {self.new_stan_s} where id ={self.shoping_index + 1}")
+                        f"update products_items set quantity = {self.new_state_s} where id ={self.shoping_index + 1}")
                     pantry_db.commit()
 
                     self.shoping_index += 1
             else:
                 self.shoping_index += 1
-                print(f"warunek nie spełniony dla {nazwa_s}")
+                print(f"warunek nie spełniony dla {name_s}")
 
 
         print(schoping_list)

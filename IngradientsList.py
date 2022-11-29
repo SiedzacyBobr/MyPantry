@@ -1,7 +1,7 @@
 from tkinter import ttk, N, S, NS, E, W, CENTER
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
-from PantryShelves import lista_do_przepisu
+from PantryShelves import recipe_list
 from LenList import len_all_pantry, name_all_pantry
 
 
@@ -36,63 +36,58 @@ class IngradientsListClass(ttk.Frame):
 
         #Tytuł tabelki
 
-        quty_label_title = ttk.Label(self.recipe_diner, text="nazwa produktu", background="green")
-        quty_label_title.grid(column=1, row=3, sticky="ew")
+        qty_label_title = ttk.Label(self.recipe_diner, text="nazwa produktu", background="green")
+        qty_label_title.grid(column=1, row=3, sticky="ew")
 
-        quty_name_title = ttk.Label(self.recipe_diner, text="ilość szt", background="green")
-        quty_name_title.grid(column=0, row=3, sticky="ew")
+        qty_name_title = ttk.Label(self.recipe_diner, text="ilość szt", background="green")
+        qty_name_title.grid(column=0, row=3, sticky="ew")
 
         #Pętla przeszukiwania danych.
         num6 = 4
-        for x, y in lista_do_przepisu.items():
+        for x, y in recipe_list.items():
 
             if y != "0":
-                quty_name = ttk.Label(self.recipe_diner, text=f"{y} szt.")
-                quty_name.grid(column=0, row=num6)
+                qty_name = ttk.Label(self.recipe_diner, text=f"{y} szt.")
+                qty_name.grid(column=0, row=num6)
 
-                quty_label = ttk.Label(self.recipe_diner, text=x)
-                quty_label.grid(column=1, row=num6)
+                qty_label = ttk.Label(self.recipe_diner, text=x)
+                qty_label.grid(column=1, row=num6)
 
             num6 +=1
         else:
-            print(f"działa funkcja all_list_out {lista_do_przepisu}")
+            print(f"działa funkcja all_list_out {recipe_list}")
             num6 +=1
 
             self.buttom_update = ttk.Button(self.recipe_diner, text="odświerz bazę danych")
             self.buttom_update.grid(columnspan=3, row=num6, sticky='ew')
             self.buttom_update.configure(command=self.db_pantry_update)
 
-
-
-
     def db_pantry_update(self):
         print("up date DB")
         print(len_all_pantry)
         print(name_all_pantry)
-        print(lista_do_przepisu)
+        print(recipe_list)
 
-        self.test_index = 0
-        for klucz, wartosc in lista_do_przepisu.items():
+        self.index_one = 0
+        for signature, value in recipe_list.items():
 
 
-            if wartosc != "0":
-                print(f"produkt {klucz} o indeksie {self.test_index} zostaje zmieniony o {wartosc} szt. ")
+            if value != "0":
+                print(f"produkt {signature} o indeksie {self.index_one} zostaje zmieniony o {value} szt. ")
 
-                self.stan = all_db_pantry[self.test_index][3]
-                print(self.stan)
-                self.new_stan = int(self.stan) - int(wartosc)
-                print(self.new_stan)
-                pantry_cursor.execute(f"update products_items set quantity = {self.new_stan} where id ={self.test_index+1}")
+                self.state = all_db_pantry[self.index_one][3]
+                print(self.state)
+                self.new_state = int(self.state) - int(value)
+                print(self.new_state)
+                pantry_cursor.execute(f"update products_items set quantity = {self.new_state} where id ={self.index_one + 1}")
                 pantry_db.commit()
 
-                self.test_index += 1
+                self.index_one += 1
 
             else:
-                self.test_index += 1
+                self.index_one += 1
 
-
-
-
+#przycisk do zaciągania listy produktów na przepis
 
     def list_approval_button(self):
 

@@ -11,14 +11,11 @@ pantry_cursor = pantry_db.cursor()
 pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
 
-
 try:
     from ctypes import windll
     windll.shcore.SetProcessDpiAwareness(1)
 except:
     pass
-
-#================================================ główne okno "Main window" ============================================
 
 
 class MainPantryWindow(tk.Tk):

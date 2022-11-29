@@ -5,13 +5,15 @@ from lokalhost_entry import passwd, user_pantry
 from LenList import name_all_pantry, len_all_pantry
 
 
+
+
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
 pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
 
-lista_do_przepisu = {}
+recipe_list = {}
 
 class PantryShelvesClass(ttk.Frame):
     def __init__(self, container, *args, **kwargs,):
@@ -88,11 +90,11 @@ class PantryShelvesClass(ttk.Frame):
             textvariable=self.new_quantity_article[wszy]) for wszy in len_all_pantry]
 
     def list_of_items_and_measure_constract(self):
-        self.name_wszystko_measure = [ttk.Label(
+        self.name_all_measure = [ttk.Label(
             self.product,
             text=f'{namas}') for namas in name_all_pantry]
 
-    def list_for_ingradients(self):  # stworzenie elementow do wyświetlenia na eklanie gdzie każdy elemnet jest indexowany.
+    def list_for_ingradients(self):
 
         num4 = 2
         for x in range(len(self.spin_qty)):
@@ -102,25 +104,18 @@ class PantryShelvesClass(ttk.Frame):
     def all_list_in_tab_product(self):
         print("Działa inicjalizacjka funkcja all_list_in_tab_product - jeśli warunk jest spełniony wyświetli się lista")
 
-
-        #num6 = 16
         for index, x in enumerate(self.spin_qty):
-            quty = x.get()
-            if int(quty) >= 0:
-                lista_do_przepisu[name_all_pantry[index]] = quty
-                print(f"zmieniona wartosć dla {name_all_pantry[index]} o wartość {quty}")
+            qty = x.get()
+            if int(qty) >= 0:
+                recipe_list[name_all_pantry[index]] = qty
+                print(f"zmieniona wartosć dla {name_all_pantry[index]} o wartość {qty}")
 
         else:
             print("Działa cała funkcja all_list_in i nastąpiło podsumowanie")
-            potwierdzenie = ttk.Label(self.product, text=f'Lista została utworzona')
-            potwierdzenie.grid(columnspan=4,row=51, sticky="ew")
-
-            print(lista_do_przepisu)
-            return lista_do_przepisu
-
-    def sprawdzenie_listy(self):
-        print("funkcja działa")
-        print(f'W słowniku jest {lista_do_przepisu}')
+            confirmation = ttk.Label(self.product, text=f'Lista została utworzona')
+            confirmation.grid(columnspan=4,row=51, sticky="ew")
+            print(recipe_list)
+            return recipe_list
 
     def list_ingradients_approval_button(self):
 
