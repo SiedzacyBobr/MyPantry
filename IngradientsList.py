@@ -1,4 +1,5 @@
 from tkinter import ttk, N, S, NS, E, W, CENTER
+import tkinter as tk
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from PantryShelves import recipe_list
@@ -23,35 +24,37 @@ class IngradientsListClass(ttk.Frame):
 
     def main_concruct_diner(self):
 
-        self.recipe_diner = ttk.Frame(self)
-        self.recipe_diner.grid(columnspan=3, row=0, sticky="ew")
+        self.recipe_diner = tk.Frame(self, background="#FFFFFF", borderwidth=1, relief='solid', padx=10, pady=10)
+        self.recipe_diner.grid(columnspan=2, row=0, sticky="EW")
+
 
     def title_contener_diner_list(self):
 
-        self.component = ttk.Label(self.recipe_diner, text="Test położenia II \n kontenera z przepisem na obiad", background="lightblue")
-        self.component.grid(columnspan=3, row=1, sticky="ew")
+        self.component = ttk.Label(self.recipe_diner, text="Lista produktów wyjętych z spiżarni", style="titile_frame_handwritten.TLabel")
+        self.component.grid(columnspan=2, row=1, sticky="EW")
 
 
     def all_list_out(self):
 
         #Tytuł tabelki
 
-        qty_label_title = ttk.Label(self.recipe_diner, text="nazwa produktu", background="green")
-        qty_label_title.grid(column=1, row=3, sticky="ew")
+        qty_label_title = ttk.Label(self.recipe_diner, text="nazwa produktu", style="column_style_handwritten.TLabel")
+        qty_label_title.grid(column=0, row=3, sticky="ew")
 
-        qty_name_title = ttk.Label(self.recipe_diner, text="ilość szt", background="green")
-        qty_name_title.grid(column=0, row=3, sticky="ew")
+        qty_name_title = ttk.Label(self.recipe_diner, text="ilość szt.", style="column_style_handwritten.TLabel")
+        qty_name_title.grid(column=1, row=3, sticky="ew")
 
-        #Pętla przeszukiwania danych.
+
+#Pętla przeszukiwania danych.
         num6 = 4
         for x, y in recipe_list.items():
 
             if y != "0":
-                qty_name = ttk.Label(self.recipe_diner, text=f"{y} szt.")
-                qty_name.grid(column=0, row=num6)
+                qty_name = ttk.Label(self.recipe_diner, text=f"{y} szt.", style="span_style_handwritten.TLabel")
+                qty_name.grid(column=1, row=num6)
 
-                qty_label = ttk.Label(self.recipe_diner, text=x)
-                qty_label.grid(column=1, row=num6)
+                qty_label = ttk.Label(self.recipe_diner, text=x, style="span_style_handwritten.TLabel")
+                qty_label.grid(column=0, row=num6)
 
             num6 +=1
         else:

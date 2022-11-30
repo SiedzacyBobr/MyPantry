@@ -4,6 +4,7 @@ import ShoppingList, PantryShelves, IngradientsList
 import mysql.connector
 from tkinter import ttk
 from lokalhost_entry import passwd, user_pantry
+from tkinter import ttk, N, S, E, NS, CENTER
 
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
@@ -26,6 +27,43 @@ class MainPantryWindow(tk.Tk):
         self.body_pantry = None
         self.main_container()
         self.stacking_conteiners()
+        self.style_constrakt()
+
+
+    def style_constrakt(self):
+
+        self.style_main = ttk.Style(self)
+        self.style_main.theme_use("alt")
+# style pisane ręcznie
+
+        self.style_main.configure("titile_frame_handwritten.TLabel",
+                                  anchor=CENTER,
+                                  background="#FFFFFF",
+                                  foreground="#1E6ADE",
+                                  font=("Ink Free", 17, "bold", "underline"))
+
+        self.style_main.configure("column_style_handwritten.TLabel",
+                                  anchor=CENTER,
+                                  background="#FFFFFF",
+                                  foreground="#1E6ADE",
+                                  font=("Ink Free", 15, "bold"))
+
+        self.style_main.configure("span_style_handwritten.TLabel",
+                                  anchor=CENTER,
+                                  background="#FFFFFF",
+                                  foreground="#1E6ADE",
+                                  font=("Ink Free", 15,))
+
+# style pisane komputerowo
+
+        self.style_main.configure("column_style_os.TLabel",  anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Courier New", 15))
+        self.style_main.configure("span_style_os.TLabel",  anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Courier New", 13))
+
+        self.style_main.configure("button_style_os.TLabel",  anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Courier New", 12))
+
+        self.style_main.configure("info_style_os.TLabel",  anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Courier New", 15))
+        self.style_main.configure("titile_frame_os.TLabel", anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE",
+                                  font=("Courier New.TLabel", 15))
 
 
     def main_container(self):
