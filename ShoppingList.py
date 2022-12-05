@@ -32,7 +32,7 @@ class ShoppingList(ttk.Frame):
 
     def main_construct_shopping(self):
 
-        self.shop_list = tk.Frame(self, background="#FFFFFF", borderwidth=1, relief='solid', padx=10, pady=10)
+        self.shop_list = tk.Frame(self, background="#FFFFFF", borderwidth=1, relief='raised', padx=10, pady=10)
         self.shop_list.grid()
 
     def title_contener_shopping_lis(self):
@@ -42,14 +42,6 @@ class ShoppingList(ttk.Frame):
 
                 self.items_products = ttk.Label(self.shop_list, text="Lista Zakupów ",style="titile_frame_handwritten.TLabel")
                 self.items_products.grid(columnspan=5, row=0, sticky="EW")
-
-
-    # def pantry_is_safe(self):
-    #
-    #     self.items_products = ttk.Label(self.shop_list, text="W spiżarni jest bezpieczny satan żywności")
-    #     self.items_products.grid(column=0, row=0, sticky="EW")
-    #     self.items_products.configure(anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE",
-    #                                   font=("Arial", 12))
 
 
     def chack_button_end_spin_box_constract(self):
@@ -119,9 +111,9 @@ class ShoppingList(ttk.Frame):
 
 # tworzenie labelki z informacją że zmiana została dokonana w bazie danych.
 
-        mylabel = ttk.Label(self.shop_list, text="Lista została zrealizowania i dodana do spiżarni")
+        mylabel = ttk.Label(self.shop_list, text="Lista została zrealizowania i dodana do spiżarni", style="span_style_handwritten.TLabel")
         mylabel.grid(columnspan=3)
-        mylabel.configure(anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Arial", 10))
+
 
 # tworzenie listy nazwa wartość
 
@@ -171,18 +163,14 @@ class ShoppingList(ttk.Frame):
         for index, x in enumerate(all_db_pantry):
             if x[4] > x[3]:
 
-                self.first_kolumn_list = ttk.Label(self.shop_list, text="Ptaszek", style="column_style_handwritten.TLabel")
+                self.first_kolumn_list = ttk.Label(self.shop_list, text="Zaznacz", style="column_style_handwritten.TLabel")
                 self.first_kolumn_list.grid(column=0, row=1, sticky="EW")
-
-
 
                 self.first_kolumn_list = ttk.Label(self.shop_list, text="Produkt", style="column_style_handwritten.TLabel")
                 self.first_kolumn_list.grid(column=1, row=1, sticky="EW")
 
-
                 self.second_kolumn_list = ttk.Label(self.shop_list, text="Jednostka", style="column_style_handwritten.TLabel")
                 self.second_kolumn_list.grid(column=2, row=1, sticky="EW")
-
 
                 self.third_kolumn_list = ttk.Label(self.shop_list, text="Ilość", style="column_style_handwritten.TLabel")
                 self.third_kolumn_list.grid(column=3, row=1, sticky="EW")
@@ -194,6 +182,6 @@ class ShoppingList(ttk.Frame):
         for index, x in enumerate(all_db_pantry):
             if x[4] > x[3]:
 
-                self.action_buttom = ttk.Button(self.shop_list, text="Zakupy zrobione")
+                self.action_buttom = ttk.Button(self.shop_list, text="Zakupy zrobione", style="button_style_handwritten.TButton")
                 self.action_buttom.grid(column=0, columnspan=6, row=51, sticky="EW")
                 self.action_buttom.configure(command=self.chack_box_print_list)

@@ -2,7 +2,6 @@ import tkinter as tk
 import tkinter.font as font
 import ShoppingList, PantryShelves, IngradientsList
 import mysql.connector
-from tkinter import ttk
 from lokalhost_entry import passwd, user_pantry
 from tkinter import ttk, N, S, E, NS, CENTER
 
@@ -36,34 +35,74 @@ class MainPantryWindow(tk.Tk):
         self.style_main.theme_use("alt")
 # style pisane ręcznie
 
+        self.colour_paper = "#FFFFFF"
+        self.colour_char_hand = "#1E6ADE"
+
         self.style_main.configure("titile_frame_handwritten.TLabel",
                                   anchor=CENTER,
-                                  background="#FFFFFF",
-                                  foreground="#1E6ADE",
+                                  background=self.colour_paper,
+                                  foreground=self.colour_char_hand,
                                   font=("Ink Free", 17, "bold", "underline"))
 
         self.style_main.configure("column_style_handwritten.TLabel",
                                   anchor=CENTER,
-                                  background="#FFFFFF",
-                                  foreground="#1E6ADE",
+                                  background=self.colour_paper,
+                                  foreground=self.colour_char_hand,
                                   font=("Ink Free", 15, "bold"))
 
         self.style_main.configure("span_style_handwritten.TLabel",
                                   anchor=CENTER,
-                                  background="#FFFFFF",
-                                  foreground="#1E6ADE",
-                                  font=("Ink Free", 15,))
+                                  background=self.colour_paper,
+                                  foreground=self.colour_char_hand,
+                                  font=("Ink Free", 20,))
+        self.style_main.configure("button_style_handwritten.TButton",
+                                  anchor=CENTER,
+                                  background=self.colour_paper,
+                                  foreground=self.colour_char_hand,
+                                  font=("Ink Free", 12))
 
 # style pisane komputerowo
 
-        self.style_main.configure("column_style_os.TLabel",  anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Courier New", 15))
-        self.style_main.configure("span_style_os.TLabel",  anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Courier New", 13))
+        self.colour_label = "#FFE918"
+        self.colour_label_title = "#FFB13C"
+        self.colour_char_komp = "#3D2705"
 
-        self.style_main.configure("button_style_os.TLabel",  anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Courier New", 12))
+        self.style_main.configure("column_style_os.TLabel",
+                                  anchor=CENTER,
+                                  background=self.colour_label_title,
+                                  foreground=self.colour_char_komp,
+                                  font=("Courier New", 13))
 
-        self.style_main.configure("info_style_os.TLabel",  anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE", font=("Courier New", 15))
-        self.style_main.configure("titile_frame_os.TLabel", anchor=CENTER, background="#FAFAF1", foreground="#1E6ADE",
-                                  font=("Courier New.TLabel", 15))
+        self.style_main.configure("span_style_os.TLabel",
+                                  anchor=CENTER,
+                                  background=self.colour_label,
+                                  foreground=self.colour_char_komp,
+                                  font=("Courier New", 11))
+
+        self.style_main.configure("button_style_os.TButton",
+                                  anchor=CENTER,
+                                  background=self.colour_label_title,
+                                  foreground=self.colour_char_komp,
+                                  font=("Courier New", 12))
+
+        self.style_main.configure("info_style_os.TLabel",
+                                  anchor=CENTER,
+                                  background=self.colour_label,
+                                  foreground=self.colour_char_komp,
+                                  font=("Courier New", 15))
+
+        self.style_main.configure("titile_frame_os.TLabel",
+                                  anchor=CENTER,
+                                  background=self.colour_label_title,
+                                  foreground=self.colour_char_komp,
+                                  font=("Courier New", 17))
+
+        self.style_main.configure("Main_title_frame_os.TLabel",
+                                  anchor=CENTER,
+                                  background="White",
+                                  foreground="black",
+                                  font=("Courier New", 17))
+
 
 
     def main_container(self):
@@ -75,9 +114,13 @@ class MainPantryWindow(tk.Tk):
         self.body_pantry.pack(side="top", fill="both", expand=True)
 
         self.hello_user = ttk.Label(self.body_pantry,
-                                    text="Witaj użytkowniku, ten program pomoże ci \n zapanować nad twoją domową spiżarnią. :)",
-                                    padding=(10,10,5),
-                                    background="White"
+                                    text="Witaj użytkowniku, ten program pomoże ci \n "
+                                         "zapanować nad twoją domową spiżarnią. \n "
+                                         "Sa dwie drogi: ze sklepu do Spiżarni i z spiżarni do Kuchni :) \n"
+                                         "Taski dla aplikacji: 1. dodać menu edytora danych : \n "
+                                         "dodawanie, usuwąnia, edytowanie \n"
+                                         "",
+                                    style="Main_title_frame_os.TLabel"
                                     )
         self.hello_user.pack()
 
