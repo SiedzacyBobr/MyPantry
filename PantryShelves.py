@@ -16,8 +16,6 @@ class PantryShelvesClass(ttk.Frame):
     def __init__(self, container, *args, **kwargs,):
         super().__init__(container, *args, **kwargs)
 
-        self.test_funkcji = IngradientsList.IngradientsListClass(container)
-
         self.main_construct_shelves()
         self.title_contener_shelves()
         self.scroll_list_shelves()
@@ -41,10 +39,9 @@ class PantryShelvesClass(ttk.Frame):
         self.shelf.grid(column=0, columnspan=6, row=0, sticky="EW")
 
     def scroll_list_shelves(self):
-        pass
 
-        # self.product_scroll = ttk.Scrollbar(self.product, orient="vertical")
-        # self.product_scroll.grid(row=0, rowspan=10, column=10, sticky="ns")
+        self.product_scroll = ttk.Scrollbar(self.product, orient="vertical")
+        self.product_scroll.grid(row=0, rowspan=10, column=10, sticky="ns")
 
     def name_column_shelves_list(self):
 
@@ -135,7 +132,6 @@ class PantryShelvesClass(ttk.Frame):
 
     def list_ingradients_approval_button(self):
 
-        self.one_buttom = ttk.Button(self.product, text="Zabrałem do Kuchni", style="button_style_os.TButton")
+        self.one_buttom = ttk.Button(self.product, text="spiżarnia ==> kuchnia", style="button_style_os.TButton")
         self.one_buttom.grid(columnspan=4, row=50, sticky='ew')
         self.one_buttom.configure(command=self.all_list_in_tab_product,)
-        #self.one_buttom.configure(command=lambda: self.test_funkcji.all_list_out)

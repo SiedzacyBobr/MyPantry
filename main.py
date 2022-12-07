@@ -1,9 +1,10 @@
 import tkinter as tk
 import tkinter.font as font
-import ShoppingList, PantryShelves, IngradientsList
+import ShoppingList, PantryShelves, IngradientsList,Addding_product, Delete_product, Editing_product
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
-from tkinter import ttk, N, S, E, NS, CENTER
+from tkinter import ttk, N, S, E, NS, CENTER, Menu
+from Style_constrakt import style_constrakt
 
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
@@ -17,92 +18,33 @@ try:
 except:
     pass
 
-
 class MainPantryWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__( *args, **kwargs)
 
+        self.manu_app()
         self.hello_user = None
         self.body_pantry = None
         self.main_container()
         self.stacking_conteiners()
-        self.style_constrakt()
+        style_constrakt()
 
 
-    def style_constrakt(self):
+    def manu_app(self):
 
-        self.style_main = ttk.Style(self)
-        self.style_main.theme_use("alt")
-# style pisane ręcznie
+# tworzenie widżetu menu o nazwie main_menu w głownym oknie aplikacji:
 
-        self.colour_paper = "#FFFFFF"
-        self.colour_char_hand = "#1E6ADE"
+        self.main_menu = tk.Menu(self)
 
-        self.style_main.configure("titile_frame_handwritten.TLabel",
-                                  anchor=CENTER,
-                                  background=self.colour_paper,
-                                  foreground=self.colour_char_hand,
-                                  font=("Ink Free", 17, "bold", "underline"))
+# Tworzenie przycisków w  głównym menu:
 
-        self.style_main.configure("column_style_handwritten.TLabel",
-                                  anchor=CENTER,
-                                  background=self.colour_paper,
-                                  foreground=self.colour_char_hand,
-                                  font=("Ink Free", 15, "bold"))
+        self.main_menu.add_command(label="Dodawanie", command=self.addding_conteiner)
+        self.main_menu.add_command(label="Usuwanie", command=self.delete_conteiner)
+        self.main_menu.add_command(label="Edytowanie", command=self.editing_conteiner)
 
-        self.style_main.configure("span_style_handwritten.TLabel",
-                                  anchor=CENTER,
-                                  background=self.colour_paper,
-                                  foreground=self.colour_char_hand,
-                                  font=("Ink Free", 20,))
-        self.style_main.configure("button_style_handwritten.TButton",
-                                  anchor=CENTER,
-                                  background=self.colour_paper,
-                                  foreground=self.colour_char_hand,
-                                  font=("Ink Free", 12))
+# dodawanie do głownego okna menu:
 
-# style pisane komputerowo
-
-        self.colour_label = "#FFE918"
-        self.colour_label_title = "#FFB13C"
-        self.colour_char_komp = "#3D2705"
-
-        self.style_main.configure("column_style_os.TLabel",
-                                  anchor=CENTER,
-                                  background=self.colour_label_title,
-                                  foreground=self.colour_char_komp,
-                                  font=("Courier New", 13))
-
-        self.style_main.configure("span_style_os.TLabel",
-                                  anchor=CENTER,
-                                  background=self.colour_label,
-                                  foreground=self.colour_char_komp,
-                                  font=("Courier New", 11))
-
-        self.style_main.configure("button_style_os.TButton",
-                                  anchor=CENTER,
-                                  background=self.colour_label_title,
-                                  foreground=self.colour_char_komp,
-                                  font=("Courier New", 12))
-
-        self.style_main.configure("info_style_os.TLabel",
-                                  anchor=CENTER,
-                                  background=self.colour_label,
-                                  foreground=self.colour_char_komp,
-                                  font=("Courier New", 15))
-
-        self.style_main.configure("titile_frame_os.TLabel",
-                                  anchor=CENTER,
-                                  background=self.colour_label_title,
-                                  foreground=self.colour_char_komp,
-                                  font=("Courier New", 17))
-
-        self.style_main.configure("Main_title_frame_os.TLabel",
-                                  anchor=CENTER,
-                                  background="White",
-                                  foreground="black",
-                                  font=("Courier New", 17))
-
+        self.config(menu=self.main_menu)
 
 
     def main_container(self):
@@ -110,16 +52,13 @@ class MainPantryWindow(tk.Tk):
         self.title("Domowa Spiżarnia")
         font.nametofont("TkDefaultFont").config(size=12)
 
-        self.body_pantry = tk.Frame(self, borderwidth=2, relief='solid',background="White")
-        self.body_pantry.pack(side="top", fill="both", expand=True)
+        self.body_pantry = tk.Frame(self, borderwidth=2, relief='solid',background="White" )
+        self.body_pantry.pack(side="top", fill="both", expand=True, padx=10, pady=10)
 
         self.hello_user = ttk.Label(self.body_pantry,
                                     text="Witaj użytkowniku, ten program pomoże ci \n "
                                          "zapanować nad twoją domową spiżarnią. \n "
-                                         "Sa dwie drogi: ze sklepu do Spiżarni i z spiżarni do Kuchni :) \n"
-                                         "Taski dla aplikacji: 1. dodać menu edytora danych : \n "
-                                         "dodawanie, usuwąnia, edytowanie \n"
-                                         "",
+                                         "Sa dwie drogi: sklep ==> spiżarnia i spiżarnia ==> kuchnia \n Powodzenia :)",
                                     style="Main_title_frame_os.TLabel"
                                     )
         self.hello_user.pack()
@@ -135,6 +74,20 @@ class MainPantryWindow(tk.Tk):
         area_shopping = ShoppingList.ShoppingList(self, padding=(10,10), borderwidth=1, relief='solid')
         area_shopping.pack(side="top", fill="both", expand=True)
 
+    def addding_conteiner(self):
+
+        addding_action = Addding_product.Adding_action_product(self, padding=(10, 10), borderwidth=1, relief='solid')
+        addding_action.pack(side="top", fill="both", expand=True)
+
+    def delete_conteiner(self):
+
+        delete_action = Delete_product.Delete_action_product(self, padding=(10, 10), borderwidth=1, relief='solid')
+        delete_action.pack(side="top", fill="both", expand=True)
+
+    def editing_conteiner(self):
+        editing_action = Editing_product.Editing_action_product(self, padding=(10, 10), borderwidth=1,
+                                                                   relief='solid')
+        editing_action.pack(side="top", fill="both", expand=True)
 
 if __name__ == '__main__':
     root = MainPantryWindow()

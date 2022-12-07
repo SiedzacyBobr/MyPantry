@@ -19,7 +19,6 @@ class IngradientsListClass(ttk.Frame):
         super().__init__(container, *args, **kwargs)
 
         self.main_concruct_diner()
-        self.title_contener_diner_list()
         self.list_approval_button()
 
     def main_concruct_diner(self):
@@ -33,8 +32,9 @@ class IngradientsListClass(ttk.Frame):
         self.component.grid(columnspan=2, row=0, sticky="EW")
 
     def all_list_out(self):
-        print("Moduł all_list_out został uruchomiony.\n ===== vvv =====")
+        print("Moduł all_list_out został uruchomiony. \n ===== vvvvv =====")
 
+        self.title_contener_diner_list()
 
         #Tytuł tabelek
 
@@ -50,7 +50,8 @@ class IngradientsListClass(ttk.Frame):
              self.list_from_shelves = json.loads(list_from_pantry_shelves.read())
              print(f"lista drukowana z jsona : {self.list_from_shelves}")
 
-        #Pętla przeszukiwania danych.
+#Pętla przeszukiwania danych.
+
         num6 = 3
         for x, y in self.list_from_shelves.items():
 
@@ -68,45 +69,56 @@ class IngradientsListClass(ttk.Frame):
         else:
             num6 +=1
 
-            self.buttom_update = ttk.Button(self.recipe_diner, text="odświerz bazę danych")
+            self.buttom_update = ttk.Button(self.recipe_diner, text="odświerz bazę danych",style="button_style_handwritten.TButton")
             self.buttom_update.grid(columnspan=3, row=num6, sticky='ew')
             self.buttom_update.configure(command=self.db_pantry_update)
 
-        print("Moduł all_list_out został zakończony.\n ===== ^^^ =====")
+        print("Moduł all_list_out został zakończony.\n ===== ^^^^^ =====")
+
+        self.buttom_ingra.destroy()
 
     def db_pantry_update(self):
-        print("Moduł db_pantry_pudate został uruchomiony.\n ===== vvv =====")
+
+# Moduł do aktualizacji bazy danych:
+
+        print("Moduł db_pantry_pudate został uruchomiony. \n ===== vvvvv =====")
 
 
         print(f"Lista z pliku.json została zaciągnięta do modułu")
 
-        self.index_one = 0
         for signature, value in self.list_from_shelves.items():
-
 
             if value != "0":
                 print(f"Produkt {signature} zostaje zaktualizowany w bazie danych o {value} szt. ")
 
-                self.state = all_db_pantry[self.index_one][3]
-                self.new_state = int(self.state) - int(value)
+                for x in all_db_pantry:
+                    if x[1] == signature:
+                        self.index_one = x[0]
 
-                pantry_cursor.execute(f"update products_items set quantity = {self.new_state} where id ={self.index_one + 1}")
+                        self.state = x[3]
+                        self.new_state = int(self.state) - int(value)
+
+    # aktualizacja bazy danych:
+
+                pantry_cursor.execute(f"update products_items set quantity = {self.new_state} where id ={self.index_one}")
                 pantry_db.commit()
 
-                self.index_one += 1
 
             else:
-                self.index_one += 1
-        print(f"Zakończone oktualizowanie bazy danych.")
-        self.buttom_ingra.destroy()
 
-        print("Moduł db_pantry_pudate został zakończony.\n ===== ^^^ =====")
+                print(f"Zakończone oktualizowanie bazy danych.")
+
+
+
+        self.buttom_update.destroy()
+
+        print("Moduł db_pantry_pudate został zakończony.\n ===== ^^^^^ =====")
 
 #przycisk do zaciągania listy produktów na przepis
 
     def list_approval_button(self):
 
-        self.buttom_ingra = ttk.Button(self.recipe_diner, text="zaciąganie listy")
+        self.buttom_ingra = ttk.Button(self.recipe_diner, text="zaciąganie listy", style="button_style_handwritten.TButton")
         self.buttom_ingra.grid(columnspan=3, row=1, sticky='ew')
         self.buttom_ingra.configure(command=self.all_list_out)
 
