@@ -4,16 +4,12 @@ import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from LenList import name_all_pantry, len_all_pantry
 
-pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
-pantry_cursor = pantry_db.cursor()
-
-pantry_cursor.execute("select * from mypantry.products_items")
-all_db_pantry = pantry_cursor.fetchall()
 
 class PantryShelvesClass(ttk.Frame):
     def __init__(self, container, *args, **kwargs,):
         super().__init__(container, *args, **kwargs)
 
+        self.done_load_DB()
         self.main_construct_shelves()
         self.title_contener_shelves()
         self.scroll_list_shelves()
@@ -26,11 +22,20 @@ class PantryShelvesClass(ttk.Frame):
         self.list_for_ingradients()
         self.list_ingradients_approval_button()
 
+# DOSTĘP DO BAZY DANYCH
+
+    def done_load_DB(self):
+        self.pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
+        self.pantry_cursor = self.pantry_db.cursor()
+
+        self.pantry_cursor.execute("select * from mypantry.products_items")
+        self.all_db_pantry = self.pantry_cursor.fetchall()
+
 # tworzony frame dla
 
     def main_construct_shelves(self):
 
-        self.product = tk.Frame(self, background="#FFE918", borderwidth=1, relief='solid', padx=10, pady=10)
+        self.product = tk.Frame(self, background="#FFE918", padx=10, pady=10)
         self.product.grid(sticky="ew")
 
 # tworzeny tytuł dla frame
@@ -68,7 +73,7 @@ class PantryShelvesClass(ttk.Frame):
     # tworzenie wiersza z nazwą produktu
     def name_article_on_shelves(self):
         num1 = 2
-        for x in all_db_pantry:
+        for x in self.all_db_pantry:
             self.article = ttk.Label(self.product, text=x[1], style="span_style_os.TLabel")
             self.article.grid(column=0, row=num1)
             num1 += 1
@@ -76,7 +81,7 @@ class PantryShelvesClass(ttk.Frame):
     # tworzenie wiersza z stanem ilosciowym produktu
     def quontity_arcicle_on_shelves(self):
         num3 = 2
-        for x in all_db_pantry:
+        for x in self.all_db_pantry:
             self.article_status = ttk.Label(self.product, text=x[3], style="span_style_os.TLabel")
             self.article_status.grid(column=1, row=num3)
             num3 += 1
@@ -84,7 +89,7 @@ class PantryShelvesClass(ttk.Frame):
     # tworzenie wiersza z opisem jednostki miary
     def unit_measure_article_on_shelves(self):
         num5 = 2
-        for x in all_db_pantry:
+        for x in self.all_db_pantry:
             self.article_unit_measure = ttk.Label(self.product, text=x[2], style="span_style_os.TLabel" )
             self.article_unit_measure.grid(column=2, row=num5, padx=5)
             num5 += 1
@@ -93,7 +98,7 @@ class PantryShelvesClass(ttk.Frame):
     def spin_qty_constract(self):
 
         # lista stanu spiżarni dla poszczególnych produktów
-        self.list_product_inventory = [x[3] for x in all_db_pantry]
+        self.list_product_inventory = [x[3] for x in self.all_db_pantry]
 
         # lista wartość do ściągnięcia z spin boxa
         self.new_quantity_article = [tk.IntVar(value=0) for wszy in len_all_pantry]
@@ -140,8 +145,7 @@ class PantryShelvesClass(ttk.Frame):
                 print(f"Zmieniona wartosć dla {name_all_pantry[index]} o wartość {qty}")
 
         else:
-            confirmation = ttk.Label(self.product, text=f'Wybrane produkuty przeniesione do Kuchni ===>> ', style="span_style_os.TLabel")
-            confirmation.grid(columnspan=4,row=51, sticky="ew")
+
             print(f'\nSłownik self.recipe_list utworzony:  {self.recipe_list}')
 
             # aktualizacja bazy danych
@@ -151,7 +155,7 @@ class PantryShelvesClass(ttk.Frame):
                 if value != "0":
                     print(f"Produkt {signature} zostaje zaktualizowany w bazie danych o {value} szt. ")
 
-                    for x in all_db_pantry:
+                    for x in self.all_db_pantry:
                         if x[1] == signature:
                             self.index_one = x[0]
 
@@ -160,16 +164,17 @@ class PantryShelvesClass(ttk.Frame):
 
                     # aktualizacja bazy danych:
 
-                    pantry_cursor.execute(
+                    self.pantry_cursor.execute(
                         f"update products_items set quantity = {self.new_state} where id ={self.index_one}")
-                    pantry_db.commit()
+                    self.pantry_db.commit()
 
-                    self.products_transferred()
+            self.pantry_db.close()
+            self.products_transferred()
 
     def products_transferred(self):
 
-        self.recipe_diner = tk.Frame(self, background="#FFFFFF", borderwidth=1, relief='solid', padx=10, pady=10)
-        self.recipe_diner.grid(columnspan=2, row=0, sticky="EW")
+        self.recipe_diner = tk.Frame(self, background="#FFFFFF", padx=10, pady=10)
+        self.recipe_diner.grid(columnspan=2, row=1, sticky="EW")
 
         self.component = ttk.Label(self.recipe_diner, text="Produkty przeniesione \n z Spiżarni do Kuchni",
                                    style="titile_frame_handwritten.TLabel")
@@ -184,7 +189,7 @@ class PantryShelvesClass(ttk.Frame):
         self.qty_name_title = ttk.Label(self.recipe_diner, text="Ilość szt.", style="column_style_handwritten.TLabel")
         self.qty_name_title.grid(column=1, row=2, sticky="ew")
 
-        num6 = 3
+        num6 = 1
         for x, y in self.recipe_list.items():
 
             if y != "0":
@@ -202,6 +207,8 @@ class PantryShelvesClass(ttk.Frame):
             num6 += 1
 
         self.product.destroy()
+        self.done_load_DB()
+
 
         print("Moduł all_list_in_tab_product został zokończony. \n =============== ^^^^ =============")
 

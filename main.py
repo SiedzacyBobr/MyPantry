@@ -18,43 +18,45 @@ try:
 except:
     pass
 
+# startowanie classy
 class MainPantryWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__( *args, **kwargs)
 
+# odpalanie funkcji
         self.manu_app()
+        self.all_frames_create()
         self.hello_user = None
         self.body_pantry = None
         self.main_container()
         self.stacking_conteiners()
+
         style_constrakt()
 
-
-    def manu_app(self):
-
 # tworzenie widżetu menu o nazwie main_menu w głownym oknie aplikacji:
+    def manu_app(self):
 
         self.main_menu = tk.Menu(self)
 
-# Tworzenie przycisków w  głównym menu:
+        # Tworzenie przycisków w  głównym menu:
 
         self.main_menu.add_command(label="Dodawanie", command=self.addding_conteiner)
         self.main_menu.add_command(label="Usuwanie", command=self.delete_conteiner)
         self.main_menu.add_command(label="Edytowanie", command=self.editing_conteiner)
+        self.main_menu.add_command(label="Spiżarnia", command=self.stacking_conteiners)
 
-# dodawanie do głownego okna menu:
+        # dodawanie do głownego okna menu:
 
         self.config(menu=self.main_menu)
 
 # tworzony gławne okno, kontener z wiadomością dla użytkownika
-
     def main_container(self):
 
         self.title("Domowa Spiżarnia")
         font.nametofont("TkDefaultFont").config(size=12)
 
-        self.body_pantry = tk.Frame(self, borderwidth=2, relief='solid',background="White" )
-        self.body_pantry.pack(side="top", fill="both", expand=True, padx=10, pady=10)
+        self.body_pantry = tk.Frame(self, background="White")
+        self.body_pantry.grid(column=0, row=0)
 
         self.hello_user = ttk.Label(self.body_pantry,
                                     text="Witaj użytkowniku, ten program pomoże ci \n "
@@ -64,34 +66,59 @@ class MainPantryWindow(tk.Tk):
                                          "3. ustawić tak dodatki z nemu by otwierały sie zamiast oktualnego fraima",
                                     style="Main_title_frame_os.TLabel"
                                     )
-        self.hello_user.pack()
-    # wstawiane kolejne kontenery
+        self.hello_user.grid(column=0, row=0)
 
+    def all_frames_create(self):
+        self.main_start_conteiner = tk.Frame(self)
+        self.addding_product_conteiner = tk.Frame(self)
+        self.delete_product_conteiner = tk.Frame(self)
+        self.editing_product_conteiner = tk.Frame(self)
+
+
+# wstawiane kolejne kontenery
     def stacking_conteiners(self):
 
-        self.main_start_conteiner = tk.Frame(self)
-        self.main_start_conteiner.pack()
+        self.czyszczenie_okna()
 
-        area_shelves = PantryShelves.PantryShelvesClass(self.main_start_conteiner, padding=(10, 10), borderwidth=1, relief='solid')
-        area_shelves.pack(side="top", fill="both", expand=True)
+        self.main_start_conteiner.grid(column=0, row=1)
 
-        area_shopping = ShoppingList.ShoppingList(self.main_start_conteiner, padding=(10, 10), borderwidth=1, relief='solid')
-        area_shopping.pack(side="top", fill="both", expand=True)
+        area_shelves = PantryShelves.PantryShelvesClass(self.main_start_conteiner, padding=(10, 10))
+        area_shelves.grid(column=0, row=1)
+
+        area_shopping = ShoppingList.ShoppingList(self.main_start_conteiner, padding=(10, 10))
+        area_shopping.grid(column=0, row=2)
 
     def addding_conteiner(self):
+        self.czyszczenie_okna()
 
-        addding_action = Addding_product.Adding_action_product(self, padding=(10, 10), borderwidth=1, relief='solid')
-        addding_action.pack(side="top", fill="both", expand=True)
+        self.addding_product_conteiner.grid(column=0, row=1)
+
+        addding_action = Addding_product.Adding_action_product(self.addding_product_conteiner, padding=(10, 10))
+        addding_action.grid(column=0, row=0)
 
     def delete_conteiner(self):
 
-        delete_action = Delete_product.Delete_action_product(self, padding=(10, 10), borderwidth=1, relief='solid')
-        delete_action.pack(side="top", fill="both", expand=True)
+        self.czyszczenie_okna()
+
+        self.delete_product_conteiner.grid(column=0, row=1)
+
+        delete_action = Delete_product.Delete_action_product(self.delete_product_conteiner, padding=(10, 10))
+        delete_action.grid(column=0, row=0)
 
     def editing_conteiner(self):
-        editing_action = Editing_product.Editing_action_product(self, padding=(10, 10), borderwidth=1,
-                                                                   relief='solid')
-        editing_action.pack(side="top", fill="both", expand=True)
+
+        self.czyszczenie_okna()
+
+        self.editing_product_conteiner.grid(column=0, row=1)
+
+        editing_action = Editing_product.Editing_action_product(self.editing_product_conteiner, padding=(10, 10))
+        editing_action.grid(column=0, row=0)
+
+    def czyszczenie_okna(self):
+        self.main_start_conteiner.grid_forget()
+        self.addding_product_conteiner.grid_forget()
+        self.delete_product_conteiner.grid_forget()
+        self.editing_product_conteiner.grid_forget()
 
 
 if __name__ == '__main__':

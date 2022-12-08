@@ -5,17 +5,6 @@ from lokalhost_entry import passwd, user_pantry
 from tkinter import font
 from LenList import name_all_pantry, len_all_pantry
 
-
-# dostęp do bazy danych
-
-pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
-pantry_cursor = pantry_db.cursor()
-
-# twerzenie z miennej z listą produktow
-
-pantry_cursor.execute("select * from mypantry.products_items")
-all_db_pantry = pantry_cursor.fetchall()
-
 # zmienne globalne
 
 schoping_list = {}
@@ -26,20 +15,32 @@ done_schoping ={}
 class ShoppingList(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
+
+        self.done_load_DB()
         self.main_construct_shopping()
         self.title_contener_shopping_lis()
         self.name_column_shopping_list()
         self.chack_button_end_spin_box_constract()
         self.selection_list_approval_button()
 
+# DOSTĘP DO BAZY DANYCH
+
+    def done_load_DB(self):
+        self.pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd,
+                                                     database="mypantry")
+        self.pantry_cursor = self.pantry_db.cursor()
+
+        self.pantry_cursor.execute("select * from mypantry.products_items")
+        self.all_db_pantry = self.pantry_cursor.fetchall()
+
     def main_construct_shopping(self):
 
-        self.shop_list = tk.Frame(self, background="#FFFFFF", borderwidth=1, relief='raised', padx=10, pady=10)
+        self.shop_list = tk.Frame(self, background="#FFFFFF", padx=10, pady=10)
         self.shop_list.grid()
 
     def title_contener_shopping_lis(self):
 
-        for index, x in enumerate(all_db_pantry):
+        for index, x in enumerate(self.all_db_pantry):
             if x[4] > x[3]:
 
                 self.items_products = ttk.Label(self.shop_list, text="Lista Zakupów ",style="titile_frame_handwritten.TLabel")
@@ -51,7 +52,7 @@ class ShoppingList(ttk.Frame):
 # tworzenie ekranu w pętli
 
         num10 = 25
-        for index, x in enumerate(all_db_pantry):
+        for index, x in enumerate(self.all_db_pantry):
 
             self.name_product = x[1]
 
@@ -62,6 +63,7 @@ class ShoppingList(ttk.Frame):
                                                     variable=self.selected_option,
                                                     onvalue=1,
                                                     offvalue=0,
+                                                    style="checkbutton_style_handwritten.TCheckbutton",
                                                     )
 
             if x[4] > x[3]:
@@ -94,7 +96,7 @@ class ShoppingList(ttk.Frame):
                 textvariable=self.quantity_items,
                 width=15,
                 justify="center",
-                font=("Ink Free", 12, "bold"),
+                font=("Ink Free", 20),
                 foreground="#1E6ADE",
                 background="#FFFFFF",
                 relief="flat"
@@ -142,7 +144,7 @@ class ShoppingList(ttk.Frame):
 
                     schoping_list[name_s] = self.guantity_s
 
-                    for x in all_db_pantry:
+                    for x in self.all_db_pantry:
                         if x[1] == name_s:
                             self.shoping_index = x[0]
 
@@ -156,9 +158,10 @@ class ShoppingList(ttk.Frame):
 
                             done_schoping[name_s] = self.guantity_s
 
-                    pantry_cursor.execute(
+                    self.pantry_cursor.execute(
                         f"update products_items set quantity = {self.new_state_s} where id ={self.shoping_index}")
-                    pantry_db.commit()
+                    self.pantry_db.commit()
+
 
             else:
                 print(f"warunek nie spełniony dla {name_s}")
@@ -166,12 +169,13 @@ class ShoppingList(ttk.Frame):
 
         self.print_done_shopping()
         self.shop_list.destroy()
-
+        self.pantry_db.close()
+        self.done_load_DB()
         print(schoping_list)
 
     def name_column_shopping_list(self):
 
-        for index, x in enumerate(all_db_pantry):
+        for index, x in enumerate(self.all_db_pantry):
             if x[4] > x[3]:
 
                 self.first_kolumn_list_b = ttk.Label(self.shop_list, text="Zaznacz", style="column_style_handwritten.TLabel")
@@ -214,7 +218,7 @@ class ShoppingList(ttk.Frame):
 
     def selection_list_approval_button(self):
 
-        for index, x in enumerate(all_db_pantry):
+        for index, x in enumerate(self.all_db_pantry):
             if x[4] > x[3]:
 
                 self.action_buttom = ttk.Button(self.shop_list, text="sklep ==> spiżarnia", style="button_style_handwritten.TButton")

@@ -35,6 +35,10 @@ def style_constrakt():
                                   foreground=colour_char_hand,
                                   font=("Ink Free", 12))
 
+    style_main.configure("checkbutton_style_handwritten.TCheckbutton",
+                         background=colour_paper, width=0,)
+
+
 # style pisane komputerowo
 
     colour_label = "#FFE918"
@@ -78,5 +82,6 @@ def style_constrakt():
                         background="White",
                         foreground="black",
                         font=("Courier New", 13))
+
 
 
