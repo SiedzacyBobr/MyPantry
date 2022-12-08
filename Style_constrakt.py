@@ -5,7 +5,8 @@ import tkinter.font as font
 def style_constrakt():
 
     style_main = ttk.Style()
-    style_main.theme_use("alt")
+    style_main.theme_use("vista")
+    print(style_main.theme_names())
 # style pisane ręcznie
 
     colour_paper = "#FFFFFF"
@@ -56,7 +57,9 @@ def style_constrakt():
                                   anchor=CENTER,
                                   background=colour_label_title,
                                   foreground=colour_char_komp,
-                                  font=("Courier New", 12))
+                                  font=("Courier New", 12),
+                                  relief="flat")
+
 
     style_main.configure("info_style_os.TLabel",
                                   anchor=CENTER,

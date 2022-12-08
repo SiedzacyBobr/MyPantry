@@ -192,13 +192,13 @@ class ShoppingList(ttk.Frame):
         self.shop_list_done_shopping = tk.Frame(self, background="#FFFFFF", borderwidth=1, relief='raised', padx=10, pady=10)
         self.shop_list_done_shopping.grid()
 
-        self.title_done_schoping = ttk.Label(self.shop_list_done_shopping, text="Zakupione produkty", style="titile_frame_handwritten.TLabel")
+        self.title_done_schoping = ttk.Label(self.shop_list_done_shopping, text="Zakupy przeniesione \n z Sklepu do Spiżarni", style="titile_frame_handwritten.TLabel")
         self.title_done_schoping.grid(columnspan=2, row=0, sticky="EW")
 
-        self.first_kolumn_done_schoping = ttk.Label(self.shop_list_done_shopping, text="Produkt", style="column_style_handwritten.TLabel")
+        self.first_kolumn_done_schoping = ttk.Label(self.shop_list_done_shopping, text="Nazwa produktu", style="column_style_handwritten.TLabel")
         self.first_kolumn_done_schoping.grid(column=0, row=1, sticky="EW")
 
-        self.second_kolumn_done_schoping = ttk.Label(self.shop_list_done_shopping, text="Ilość", style="column_style_handwritten.TLabel")
+        self.second_kolumn_done_schoping = ttk.Label(self.shop_list_done_shopping, text="Ilość szt.", style="column_style_handwritten.TLabel")
         self.second_kolumn_done_schoping.grid(column=1, row=1, sticky="EW")
 
         num1 = 2
@@ -207,7 +207,7 @@ class ShoppingList(ttk.Frame):
             self.neme_done_shoping = ttk.Label(self.shop_list_done_shopping, text=name, style="span_style_handwritten.TLabel")
             self.neme_done_shoping.grid(column=0, row=num1)
 
-            self.value_done_shoping = ttk.Label(self.shop_list_done_shopping,text=value, style="span_style_handwritten.TLabel")
+            self.value_done_shoping = ttk.Label(self.shop_list_done_shopping,text=f'{value} szt.', style="span_style_handwritten.TLabel")
             self.value_done_shoping.grid(column=1, row=num1)
 
             num1 +=1

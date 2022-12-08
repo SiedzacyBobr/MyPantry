@@ -1,9 +1,9 @@
 import tkinter as tk
 import tkinter.font as font
-import ShoppingList, PantryShelves, IngradientsList,Addding_product, Delete_product, Editing_product
+import ShoppingList, PantryShelves, Addding_product, Delete_product, Editing_product
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
-from tkinter import ttk, N, S, E, NS, CENTER, Menu
+from tkinter import ttk
 from Style_constrakt import style_constrakt
 
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
@@ -46,6 +46,7 @@ class MainPantryWindow(tk.Tk):
 
         self.config(menu=self.main_menu)
 
+# tworzony gławne okno, kontener z wiadomością dla użytkownika
 
     def main_container(self):
 
@@ -58,20 +59,23 @@ class MainPantryWindow(tk.Tk):
         self.hello_user = ttk.Label(self.body_pantry,
                                     text="Witaj użytkowniku, ten program pomoże ci \n "
                                          "zapanować nad twoją domową spiżarnią. \n "
-                                         "Sa dwie drogi: sklep ==> spiżarnia i spiżarnia ==> kuchnia \n Powodzenia :)",
+                                         "Sa dwie drogi: sklep ==> spiżarnia i spiżarnia ==> kuchnia \n Powodzenia :) \n"
+                                         "2. uruchomić odświerzanie stanu aplicjajii by nie trzeba było wyłączać i uruchaiać na nawo \n"
+                                         "3. ustawić tak dodatki z nemu by otwierały sie zamiast oktualnego fraima",
                                     style="Main_title_frame_os.TLabel"
                                     )
         self.hello_user.pack()
+    # wstawiane kolejne kontenery
 
     def stacking_conteiners(self):
 
-        area_ingredient = IngradientsList.IngradientsListClass(self, padding=(10, 10), borderwidth=1, relief='solid')
-        area_ingredient.pack(side="right", fill="both", expand=True)
+        self.main_start_conteiner = tk.Frame(self)
+        self.main_start_conteiner.pack()
 
-        area_shelves = PantryShelves.PantryShelvesClass(self, padding=(10,10), borderwidth=1, relief='solid')
+        area_shelves = PantryShelves.PantryShelvesClass(self.main_start_conteiner, padding=(10, 10), borderwidth=1, relief='solid')
         area_shelves.pack(side="top", fill="both", expand=True)
 
-        area_shopping = ShoppingList.ShoppingList(self, padding=(10,10), borderwidth=1, relief='solid')
+        area_shopping = ShoppingList.ShoppingList(self.main_start_conteiner, padding=(10, 10), borderwidth=1, relief='solid')
         area_shopping.pack(side="top", fill="both", expand=True)
 
     def addding_conteiner(self):
@@ -89,7 +93,7 @@ class MainPantryWindow(tk.Tk):
                                                                    relief='solid')
         editing_action.pack(side="top", fill="both", expand=True)
 
+
 if __name__ == '__main__':
     root = MainPantryWindow()
     root.mainloop()
-

@@ -19,7 +19,7 @@ class Editing_action_product(ttk.Frame):
 
     def editing_conteiner(self):
 
-        self.editing_conteiner_frame = tk.Frame(self, background="lightblue")
+        self.editing_conteiner_frame = tk.Frame(self,)
         self.editing_conteiner_frame.grid()
 
         self.title_editing_freme = ttk.Label(self.editing_conteiner_frame, text="Okienko do edytewania produktu w Spirzarni :)", style="Main_title_frame_os.TLabel")

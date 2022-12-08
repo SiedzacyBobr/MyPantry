@@ -27,7 +27,7 @@ class Adding_action_product(ttk.Frame):
         # name_Entry = tk.Entry(adding_window, )  # textvariable=name)
         # name_Entry.grid(column=1, row=0)
 
-        self.addding_conteiner_frame = tk.Frame(self, background= "lightblue")
+        self.addding_conteiner_frame = tk.Frame(self)
         self.addding_conteiner_frame.grid()
 
         self.title_addding_frame = ttk.Label(self.addding_conteiner_frame, text="Okienko do dodawanria produktów do spiżarni", style="Main_title_frame_os.TLabel")
@@ -60,22 +60,11 @@ class Adding_action_product(ttk.Frame):
         self.insert_buttom = tk.Button(self.addding_conteiner_frame, text="dodaj do mojej spiżarni", command=self.action_add_product)
         self.insert_buttom.grid(columnspan=8, sticky="EW")
 
-    #def action_add_product(adding_window):
-    #print("Moduł action_add_product rozpoczął swoje działanie. \n ===== vvvvv =====")
 
-    # name = name_Entry.get()
-    # unit = unit_Entry.get()
-    # qty = qty_Entry.get()
-    # sefty = sefty_Entry.get()
-    # print(f" uruchomienie action_add_product {name, unit, qty, sefty}")
-
-  #  adding_window.mainloop()
-
-    #return name, unit, qty, sefty
 
     def action_add_product(self):
 
-        self.name = self.name_Entry.get()   #name_Entry.get()
+        self.name = self.name_Entry.get()
         self.unit = self.unit_Entry.get()
         self.qty = self.qty_Entry.get()
         self.sefty = self.sefty_Entry.get()
@@ -85,7 +74,7 @@ class Adding_action_product(ttk.Frame):
                 f"INSERT INTO mypantry.products_items (name_product, unit_of_measure, quantity, seftystock) VALUES ( '{self.name}','{self.unit}', {self.qty}, {self.sefty})")
         pantry_db.commit()
 
-        #print("Moduł action add_product zakończył swoje działanie. \n ===== ^^^^^ =====")
+        print("Moduł action add_product zakończył swoje działanie. \n ===== ^^^^^ =====")
 
 
 

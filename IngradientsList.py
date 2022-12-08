@@ -28,7 +28,7 @@ class IngradientsListClass(ttk.Frame):
 
     def title_contener_diner_list(self):
 
-        self.component = ttk.Label(self.recipe_diner, text="Lista produktów przeniesionych \n z Spiżarni do Kuchni", style="titile_frame_handwritten.TLabel")
+        self.component = ttk.Label(self.recipe_diner, text="Produkty przeniesione \n z Spiżarni do Kuchni", style="titile_frame_handwritten.TLabel")
         self.component.grid(columnspan=2, row=0, sticky="EW")
 
     def all_list_out(self):

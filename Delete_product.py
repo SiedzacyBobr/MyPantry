@@ -19,7 +19,7 @@ class Delete_action_product(ttk.Frame):
 
     def delete_conteiner(self):
 
-        self.delete_conteiner_frame = tk.Frame(self, background= "lightblue")
+        self.delete_conteiner_frame = tk.Frame(self)
         self.delete_conteiner_frame.grid()
 
         self.title_delete_freme = ttk.Label(self.delete_conteiner_frame, text="Okienko do usuwania produktu z Spiżarni :)", style="Main_title_frame_os.TLabel")
