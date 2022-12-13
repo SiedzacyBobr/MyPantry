@@ -1,7 +1,6 @@
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 
-
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 

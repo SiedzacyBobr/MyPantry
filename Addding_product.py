@@ -9,10 +9,6 @@ pantry_cursor = pantry_db.cursor()
 pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
 
-# name = "test2" #tk.StringVar()
-# unit = "test3" #tk.StringVar()
-# qty = 1 #tk.IntVar()
-# sefty =2  #tk.IntVar()
 
 class Adding_action_product(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
@@ -22,36 +18,31 @@ class Adding_action_product(ttk.Frame):
 
     def addding_conteiner(self):
 
-        # adding_window = tk.Tk()
-        # adding_window.title("Dodawanie nowych produktów")
-        # name_Entry = tk.Entry(adding_window, )  # textvariable=name)
-        # name_Entry.grid(column=1, row=0)
-
         self.addding_conteiner_frame = tk.Frame(self)
         self.addding_conteiner_frame.grid()
 
         self.title_addding_frame = ttk.Label(self.addding_conteiner_frame, text="Okienko do dodawanria produktów do spiżarni", style="Main_title_frame_os.TLabel")
         self.title_addding_frame.grid(columnspan=7, row=0)
 
-        self.name_Entry = tk.Entry(self.addding_conteiner_frame, )#textvariable=name)
+        self.name_Entry = tk.Entry(self.addding_conteiner_frame, )
         self.name_Entry.grid(column=1, row=1)
 
         self.name_Label = tk.Label(self.addding_conteiner_frame, text="nazwa: ")
         self.name_Label.grid(column=0, row=1)
 
-        self.unit_Entry = tk.Entry(self.addding_conteiner_frame, )#textvariable=unit)
+        self.unit_Entry = tk.Entry(self.addding_conteiner_frame, )
         self.unit_Entry.grid(column=3, row=1)
 
         self.unit_Label = tk.Label(self.addding_conteiner_frame, text="jednostka: ")
         self.unit_Label.grid(column=2, row=1)
 
-        self.qty_Entry = tk.Entry(self.addding_conteiner_frame, ) #textvariable=qty)
+        self.qty_Entry = tk.Entry(self.addding_conteiner_frame, )
         self.qty_Entry.grid(column=5, row=1)
 
         self.qty_Label = tk.Label(self.addding_conteiner_frame, text="ilość: " )
         self.qty_Label.grid(column=4, row=1)
 
-        self.sefty_Entry = tk.Entry(self.addding_conteiner_frame,)# textvariable=sefty)
+        self.sefty_Entry = tk.Entry(self.addding_conteiner_frame,)
         self.sefty_Entry.grid(column=7, row=1)
 
         self.sefty_Label = tk.Label(self.addding_conteiner_frame, text="żelazny zapas")
@@ -71,10 +62,12 @@ class Adding_action_product(ttk.Frame):
         print(f" uruchomienie action_add_product {self.name, self.unit, self.qty, self.sefty}")
 
         pantry_cursor.execute(
-                f"INSERT INTO mypantry.products_items (name_product, unit_of_measure, quantity, seftystock) VALUES ( '{self.name}','{self.unit}', {self.qty}, {self.sefty})")
+                f"INSERT INTO mypantry.products_items (name_product, unit_of_measure, quantity, seftystock) VALUES ( '{self.name}','{self.unit}', {self.qty}, {self.sefty})"
+        )
         pantry_db.commit()
 
         print("Moduł action add_product zakończył swoje działanie. \n ===== ^^^^^ =====")
+
 
 
 

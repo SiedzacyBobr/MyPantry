@@ -22,7 +22,7 @@ class Editing_action_product(ttk.Frame):
         self.editing_conteiner_frame = tk.Frame(self,)
         self.editing_conteiner_frame.grid()
 
-        self.title_editing_freme = ttk.Label(self.editing_conteiner_frame, text="Okienko do edytewania produktu w Spirzarni :)", style="Main_title_frame_os.TLabel")
+        self.title_editing_freme = ttk.Label(self.editing_conteiner_frame, text="Okienko do edytewania produktu w Spiżarni :)", style="Main_title_frame_os.TLabel")
         self.title_editing_freme.grid(columnspan=8, row=0, sticky="EW")
 
         self.name_all_product = name_all_pantry

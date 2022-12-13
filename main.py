@@ -1,16 +1,8 @@
 import tkinter as tk
 import tkinter.font as font
 import ShoppingList, PantryShelves, Addding_product, Delete_product, Editing_product
-import mysql.connector
-from lokalhost_entry import passwd, user_pantry
 from tkinter import ttk
 from Style_constrakt import style_constrakt
-
-pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
-pantry_cursor = pantry_db.cursor()
-
-pantry_cursor.execute("select * from mypantry.products_items")
-all_db_pantry = pantry_cursor.fetchall()
 
 try:
     from ctypes import windll
@@ -25,12 +17,12 @@ class MainPantryWindow(tk.Tk):
 
 # odpalanie funkcji
         self.manu_app()
+        self.main_container()
+        self.info_for_user()
         self.all_frames_create()
         self.hello_user = None
         self.body_pantry = None
-        self.main_container()
         self.stacking_conteiners()
-
         style_constrakt()
 
 # tworzenie widżetu menu o nazwie main_menu w głownym oknie aplikacji:
@@ -53,27 +45,37 @@ class MainPantryWindow(tk.Tk):
     def main_container(self):
 
         self.title("Domowa Spiżarnia")
-        font.nametofont("TkDefaultFont").config(size=12)
 
-        self.body_pantry = tk.Frame(self, background="White")
+    def info_for_user(self):
+
+        self.body_pantry = tk.Frame(self, pady=10, padx=10, borderwidth=1, relief="solid")
         self.body_pantry.grid(column=0, row=0)
 
         self.hello_user = ttk.Label(self.body_pantry,
                                     text="Witaj użytkowniku, ten program pomoże ci \n "
                                          "zapanować nad twoją domową spiżarnią. \n "
-                                         "Sa dwie drogi: sklep ==> spiżarnia i spiżarnia ==> kuchnia \n Powodzenia :) \n"
-                                         "2. uruchomić odświerzanie stanu aplicjajii by nie trzeba było wyłączać i uruchaiać na nawo \n"
-                                         "3. ustawić tak dodatki z nemu by otwierały sie zamiast oktualnego fraima",
-                                    style="Main_title_frame_os.TLabel"
+                                         "Sa dwie drogi: sklep ==> spiżarnia i spiżarnia ==> kuchnia \n Powodzenia :) \n",
+                                    style="Main_title_frame_os.TLabel", borderwidth=1, relief="solid"
                                     )
         self.hello_user.grid(column=0, row=0)
 
+        self.reload_buttom = ttk.Button(self.body_pantry, text="odświeżenie")
+        self.reload_buttom.grid(column=0, row=4)
+        self.reload_buttom.configure(command=self.update_main)
+
+    def update_main(self):
+        self.destroy()
+        root = MainPantryWindow()
+        root.mainloop()
+
+
+# ładowanie frameów dla całego okna
     def all_frames_create(self):
+
         self.main_start_conteiner = tk.Frame(self)
         self.addding_product_conteiner = tk.Frame(self)
         self.delete_product_conteiner = tk.Frame(self)
         self.editing_product_conteiner = tk.Frame(self)
-
 
 # wstawiane kolejne kontenery
     def stacking_conteiners(self):
@@ -82,10 +84,10 @@ class MainPantryWindow(tk.Tk):
 
         self.main_start_conteiner.grid(column=0, row=1)
 
-        area_shelves = PantryShelves.PantryShelvesClass(self.main_start_conteiner, padding=(10, 10))
+        area_shelves = PantryShelves.PantryShelvesClass(self.main_start_conteiner, borderwidth=1, relief="solid", padding=10)
         area_shelves.grid(column=0, row=1)
 
-        area_shopping = ShoppingList.ShoppingList(self.main_start_conteiner, padding=(10, 10))
+        area_shopping = ShoppingList.ShoppingList(self.main_start_conteiner, borderwidth=1, relief="solid", padding=10)
         area_shopping.grid(column=0, row=2)
 
     def addding_conteiner(self):
@@ -97,7 +99,6 @@ class MainPantryWindow(tk.Tk):
         addding_action.grid(column=0, row=0)
 
     def delete_conteiner(self):
-
         self.czyszczenie_okna()
 
         self.delete_product_conteiner.grid(column=0, row=1)
@@ -106,7 +107,6 @@ class MainPantryWindow(tk.Tk):
         delete_action.grid(column=0, row=0)
 
     def editing_conteiner(self):
-
         self.czyszczenie_okna()
 
         self.editing_product_conteiner.grid(column=0, row=1)
@@ -114,6 +114,8 @@ class MainPantryWindow(tk.Tk):
         editing_action = Editing_product.Editing_action_product(self.editing_product_conteiner, padding=(10, 10))
         editing_action.grid(column=0, row=0)
 
+
+# moduł do usówania niepotrzebnych fremów
     def czyszczenie_okna(self):
         self.main_start_conteiner.grid_forget()
         self.addding_product_conteiner.grid_forget()
