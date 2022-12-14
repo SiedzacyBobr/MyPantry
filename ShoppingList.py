@@ -21,7 +21,6 @@ class ShoppingList(ttk.Frame):
         self.interactive_shoppnig_list()
         self.selection_list_approval_button()
 
-# Dostęp do bazy danych i tworzenie all_db_pantry w klasie
 
     def done_load_db(self):
         self.pantry_db = mysql.connector.connect(
@@ -37,8 +36,6 @@ class ShoppingList(ttk.Frame):
 
         print(f'lista all_db_pantry jest świągnięta i wstawiona w Shopping')
 
-# tworzony frame dla shoping w głównym oknie Shopping
-
     def main_frame_for_the_shopping_list(self):
 
         self.shop_list = tk.Frame(
@@ -51,7 +48,6 @@ class ShoppingList(ttk.Frame):
         )
         self.shop_list.grid(column=1, row=0)
 
-# tworzenie tytułu dla frema
 
     def main_frame_title_shopping_list(self):
 

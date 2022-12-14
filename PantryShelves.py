@@ -1,8 +1,7 @@
 import tkinter as tk
-from tkinter import ttk, N, S, NS, CENTER
+from tkinter import ttk
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
-from LenList import name_all_pantry, len_all_pantry
 from Style_constrakt import colour_label_span, colour_char_hand, colour_paper_hand
 
 class PantryShelvesClass(ttk.Frame):
@@ -20,7 +19,6 @@ class PantryShelvesClass(ttk.Frame):
         self.interactive_shelves_in_the_pantry()
         self.list_ingradients_approval_button()
 
-# dostęp do bazy danych i tworzenie all_db_pantry
     def done_load_db(self):
 
         self.pantry_db = mysql.connector.connect(
@@ -36,7 +34,6 @@ class PantryShelvesClass(ttk.Frame):
 
         print(f'lista all_db_pantry jest świągnięta i wstawiona w PantryShelves')
 
-# tworzony frame dla productów, głównego okna spiżarni
 
     def main_frame_shelves(self):
 
@@ -49,8 +46,6 @@ class PantryShelvesClass(ttk.Frame):
             pady=10,
         )
         self.product.grid(column=0, row=0)
-
-# tworzeny tytuł dla frame
 
     def main_frame_title_shelves(self):
 

@@ -1,21 +1,17 @@
 from tkinter import ttk, N, S, E, NS, CENTER
 
-# celery dla okna spiżarni
 colour_label_title = "silver"
 colour_label_column = "lightblue"
 colour_label_span = "lightgray"
 colour_char_komp = "Black"
 
-# colory dla okienek pinasych
 colour_paper_hand = "White"
 colour_char_hand = "darkblue"
-
 
 def style_constrakt():
 
     style_main = ttk.Style()
     style_main.theme_use("vista")
-# style pisane ręcznie
 
     style_main.configure("titile_frame_handwritten.TLabel",
                          anchor=CENTER,
@@ -42,9 +38,6 @@ def style_constrakt():
 
     style_main.configure("checkbutton_style_handwritten.TCheckbutton",
                          background=colour_paper_hand, width=0, )
-
-
-# style pisane komputerowo
 
 
     style_main.configure("column_style_os.TLabel",
