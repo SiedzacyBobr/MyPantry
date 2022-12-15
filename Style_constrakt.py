@@ -36,15 +36,23 @@ def style_constrakt():
                          foreground=colour_char_hand,
                          font=("Ink Free", 12))
 
-    style_main.configure("checkbutton_style_handwritten.TCheckbutton",
-                         background=colour_paper_hand, width=0, )
+    style_main.configure(
+        "checkbutton_style_handwritten.TCheckbutton",
+        background=colour_paper_hand,
+        width=0,
+    )
 
 
-    style_main.configure("column_style_os.TLabel",
-                                  anchor=CENTER,
-                                  background=colour_label_column,
-                                  foreground=colour_char_komp,
-                                  font=("Courier New", 15))
+    style_main.configure(
+        "column_style_os.TLabel",
+        anchor=CENTER,
+        background=colour_label_column,
+        foreground=colour_char_komp,
+        font=("Courier New", 15),
+        borderwidth=1,
+        relief="solid",
+        padding=2,
+    )
 
     style_main.configure("span_style_os.TLabel",
                                   anchor=CENTER,
