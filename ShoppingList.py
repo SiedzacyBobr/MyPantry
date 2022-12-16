@@ -3,6 +3,8 @@ from tkinter import ttk
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from Style_constrakt import colour_paper_hand, colour_char_hand
+import webview
+
 
 
 class ShoppingList(ttk.Frame):
@@ -34,8 +36,6 @@ class ShoppingList(ttk.Frame):
 
         self.pantry_cursor.execute("select * from mypantry.products_items")
         self.all_db_pantry = self.pantry_cursor.fetchall()
-
-        print(f'lista all_db_pantry jest świągnięta i wstawiona w Shopping')
 
     def main_frame_for_the_shopping_list(self):
 
@@ -127,12 +127,14 @@ class ShoppingList(ttk.Frame):
         for x in self.all_db_pantry:
 
             self.selected_option = tk.IntVar(value=None)
-            self.testing_chack_buttom = ttk.Checkbutton(
+            self.testing_chack_buttom = tk.Checkbutton(
                 self.scrollable_frame,
                 variable=self.selected_option,
                 onvalue=1,
                 offvalue=0,
-                style="checkbutton_style_handwritten.TCheckbutton",
+                background=colour_paper_hand,
+                relief="flat"
+
                 )
 
             self.name_product_label = ttk.Label(
@@ -150,15 +152,16 @@ class ShoppingList(ttk.Frame):
             self.quantity_items = tk.IntVar(value=x[4] - x[3])
             self.spin_box = tk.Spinbox(
                 self.scrollable_frame,
+                width=5,
                 from_=0,
                 to=30,
                 textvariable=self.quantity_items,
-                width=15,
                 justify="center",
                 font=("Ink Free", 15),
                 foreground=colour_char_hand,
                 background=colour_paper_hand,
-                relief="flat",
+                borderwidth=2,
+                relief="sunken",
             )
 
             if x[4] > x[3]:
@@ -174,8 +177,6 @@ class ShoppingList(ttk.Frame):
 
     def chack_box_print_list(self):
 
-        # tworzenie listy nazwa wartość
-
         for name, value in self.list_chack_box_botton.items():
             self.selected_op = value.get()
             self.list_chack_box_botton[name] = self.selected_op
@@ -183,8 +184,6 @@ class ShoppingList(ttk.Frame):
         for name, value in self.list_spin_box_botton.items():
             self.selected_sp = value.get()
             self.list_spin_box_botton[name] = self.selected_sp
-
-        # tworzenie listy nazwa wartość
 
         for name_s, volue_s in self.list_chack_box_botton.items():
 
@@ -309,23 +308,6 @@ class ShoppingList(ttk.Frame):
         self.buttom_print.grid(columnspan=2, row=num1 + 1)
 
     def pritnt_list(self):
-        self.top_winodw_print = tk.Toplevel()
-        self.top_winodw_print.title("Lista przeniesionych produktów")
 
-        self.labelka = ttk.Label(
-            self.top_winodw_print,
-            text='Plik się drukuje \n'
-                 '\n'
-                 'Tra la la la la \n'
-                 '\n'
-                 'Plik się drukuje \n'
-                 '\n'
-                 'Tra la la la la la \n'
-                 '\n'
-                 'Plik się drukuje \n'
-                 '\n'
-                 'Tra la la la la \n'
-                 '\n'
-                 'Wygląda jak plik, który drukował sie tam\n')
-        self.labelka.pack()
-        print("plik się durukuje Sia La laa laaa, ")
+        webview.create_window("Plik się drukuje",'https://www.youtube.com/watch?v=15nMlfogITw')
+        webview.start()

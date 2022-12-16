@@ -40,20 +40,38 @@ class MainPantryWindow(tk.Tk):
 
     def info_for_user(self):
 
-        self.body_pantry = tk.Frame(self, pady=10, padx=10, borderwidth=1, relief="solid")
+        self.body_pantry = tk.Frame(
+            self,
+            pady=10,
+            padx=10,
+            width=691,
+            height=150,
+            borderwidth=1,
+            relief="solid"
+        )
         self.body_pantry.grid(column=0, row=0)
+        self.body_pantry.grid_propagate(0)
 
-        self.hello_user = ttk.Label(self.body_pantry,
-                                    text="Witaj użytkowniku, ten program pomoże ci \n "
-                                         "zapanować nad twoją domową spiżarnią. \n "
-                                         "Sa dwie drogi: sklep ==> spiżarnia i spiżarnia ==> kuchnia \n Powodzenia :) \n",
-                                    style="Main_title_frame_os.TLabel", borderwidth=1, relief="solid"
-                                    )
-        self.hello_user.grid(column=0, row=0)
+        self.hello_user = ttk.Label(
+            self.body_pantry,
+            text="Witaj użytkowniku, ten program pomoże ci \n "
+             "zapanować nad twoją domową spiżarnią. \n "
+             "Sa dwie drogi: sklep ==> spiżarnia i spiżarnia ==> kuchnia \n Powodzenia :) \n",
+             style="Main_title_frame_os.TLabel",
+            borderwidth=1,
+            relief="solid",
+            width=66
+        )
 
-        self.reload_buttom = ttk.Button(self.body_pantry, text="odświeżenie")
-        self.reload_buttom.grid(column=0, row=4)
-        self.reload_buttom.configure(command=self.update_main)
+        self.reload_buttom = ttk.Button(
+            self.body_pantry,
+            text="odświeżenie",
+            command=self.update_main
+        )
+
+        self.hello_user.grid(column=0, row=0, sticky="ew")
+        self.reload_buttom.grid(column=0, row=1)
+
 
     def update_main(self):
         self.destroy()
@@ -73,10 +91,16 @@ class MainPantryWindow(tk.Tk):
 
         self.main_start_conteiner.grid(column=0, row=1)
 
-        area_shelves = PantryShelves.PantryShelvesClass(self.main_start_conteiner, borderwidth=1, relief="solid", padding=10)
+        area_shelves = PantryShelves.PantryShelvesClass(
+            self.main_start_conteiner,
+            padding=10,
+        )
         area_shelves.grid(column=0, row=1)
 
-        area_shopping = ShoppingList.ShoppingList(self.main_start_conteiner, borderwidth=1, relief="solid", padding=10)
+        area_shopping = ShoppingList.ShoppingList(
+            self.main_start_conteiner,
+            padding=10,
+        )
         area_shopping.grid(column=0, row=2)
 
     def addding_conteiner(self):
@@ -84,7 +108,10 @@ class MainPantryWindow(tk.Tk):
 
         self.addding_product_conteiner.grid(column=0, row=1)
 
-        addding_action = Addding_product.Adding_action_product(self.addding_product_conteiner, padding=(10, 10))
+        addding_action = Addding_product.Adding_action_product(
+            self.addding_product_conteiner,
+            padding=(10, 10),
+        )
         addding_action.grid(column=0, row=0)
 
     def delete_conteiner(self):
@@ -92,7 +119,10 @@ class MainPantryWindow(tk.Tk):
 
         self.delete_product_conteiner.grid(column=0, row=1)
 
-        delete_action = Delete_product.Delete_action_product(self.delete_product_conteiner, padding=(10, 10))
+        delete_action = Delete_product.Delete_action_product(
+            self.delete_product_conteiner,
+            padding=(10, 10),
+        )
         delete_action.grid(column=0, row=0)
 
     def editing_conteiner(self):
