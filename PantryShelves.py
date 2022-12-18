@@ -38,12 +38,8 @@ class PantryShelvesClass(ttk.Frame):
 
         self.all_db_pantry = self.pantry_cursor.fetchall()
 
-        for x in self.all_db_pantry:
-            self.set_kategorii.add(x[5])
-
-
-        print(self.set_kategorii)
-        self.list_kategorii = list(self.set_kategorii)
+        self.pantry_cursor.execute("select kategoria from mypantry.kategorie")
+        self.list_kategorii = self.pantry_cursor.fetchall()
         print(self.list_kategorii)
 
     def main_frame_shelves(self):

@@ -8,9 +8,9 @@ from Style_constrakt import colour_label_column, colour_label_span, colour_paper
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
-pantry_cursor.execute("select * from mypantry.products_items")
-all_db_pantry = pantry_cursor.fetchall()
-
+pantry_cursor.execute("select kategoria from mypantry.kategorie")
+all_kategoria = pantry_cursor.fetchall()
+print(all_kategoria)
 
 class Adding_action_product(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
@@ -113,15 +113,26 @@ class Adding_action_product(ttk.Frame):
             relief="sunken",
             foreground=colour_char_hand,
         )
-        self.kategorii_Entry = tk.Entry(
+        # self.kategorii_Entry = tk.Entry(
+        #     self.addding_conteiner_frame,
+        #     background=colour_paper_hand,
+        #     width=5,
+        #     justify="center",
+        #     font=("Ink Free", 13),
+        #     borderwidth=2,
+        #     relief="sunken",
+        #     foreground=colour_char_hand,
+        # )
+        self.wybrana_kategoria = tk.StringVar()
+        self.kategorii_Entry = tk.Spinbox(
             self.addding_conteiner_frame,
-            background=colour_paper_hand,
-            width=5,
-            justify="center",
-            font=("Ink Free", 13),
+            values=all_kategoria,
+            textvariable=self.wybrana_kategoria,
+            font=('Ink Free', 13),
             borderwidth=2,
             relief="sunken",
-            foreground=colour_char_hand,
+            justify="center",
+            width=10,
         )
         self.insert_buttom = ttk.Button(
             self.addding_conteiner_frame,
@@ -153,22 +164,19 @@ class Adding_action_product(ttk.Frame):
         self.kate = self.kategorii_Entry.get()
 
         pantry_cursor.execute(
-                f"INSERT INTO mypantry.products_items (name_product, unit_of_measure, quantity, seftystock) VALUES ( '{self.name}','{self.unit}', {self.qty}, {self.sefty})"
-        )
-        pantry_db.commit()
-
-        pantry_cursor.execute(
-            "INSERT INTO mypantry.kategorie (kategoria) "
-            f"select * from (select '{self.kate}' as kategoria) as new_value " 
+            f"INSERT INTO mypantry.kategorie (kategoria) "
+            f"select * from (select '{self.kate}' as kategoria) as new_value "
             f"where not exists (select kategoria from mypantry.kategorie where kategoria = '{self.kate}') limit 1"
         )
         pantry_db.commit()
 
-        pantry_cursor.execute(
-            f"select id from mypantry.products_items where name_product = {self.name}"
 
-            #f"INSERT INTO mypantry.product_to_kategorii (kategorida_id, product_id) VALUES ( 123, 345)"
+        pantry_cursor.execute(
+            f"INSERT INTO mypantry.products_items"
+            f" (name_product, unit_of_measure, quantity, seftystock, id_kategorie)"
+            f" VALUES ( '{self.name}','{self.unit}', {self.qty} , {self.sefty}, (select id from mypantry.kategorie where kategoria = '{self.kate}'))"
         )
+
         pantry_db.commit()
 
         self.masage_label = ttk.Label(
