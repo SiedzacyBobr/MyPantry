@@ -4,13 +4,11 @@ import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from Style_constrakt import colour_label_column, colour_label_span, colour_paper_hand, colour_char_hand
 
-
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
 pantry_cursor.execute("select kategoria from mypantry.kategorie")
 all_kategoria = pantry_cursor.fetchall()
-print(all_kategoria)
 
 class Adding_action_product(ttk.Frame):
     def __init__(self, container, *args, **kwargs):

@@ -38,9 +38,10 @@ class PantryShelvesClass(ttk.Frame):
 
         self.all_db_pantry = self.pantry_cursor.fetchall()
 
-        self.pantry_cursor.execute("select kategoria from mypantry.kategorie")
-        self.list_kategorii = self.pantry_cursor.fetchall()
-        print(self.list_kategorii)
+        self.pantry_cursor.execute("SELECT kategoria"
+                                   " FROM mypantry.kategorie"
+                                   " WHERE kategoria != 'nowa'")
+        self.category_list = self.pantry_cursor.fetchall()
 
     def main_frame_shelves(self):
 
@@ -102,11 +103,11 @@ class PantryShelvesClass(ttk.Frame):
             style="span_style_os.TLabel",
         )
 
-        self.wybrana_kategoria = tk.StringVar()
+        self.selected_category = tk.StringVar()
         self.product_select = tk.Spinbox(
             self.scrollable_frame,
-            values=self.list_kategorii,
-            textvariable=self.wybrana_kategoria,
+            values=self.category_list,
+            textvariable=self.selected_category,
             font=("Courier New", 15),
             justify="center",
             background=colour_paper_hand,
@@ -160,52 +161,73 @@ class PantryShelvesClass(ttk.Frame):
 
     def interactive_shelves_in_the_pantry(self):
 
-        sort = self.wybrana_kategoria.get()
+        self.product_list_by_category = []
+        sort = self.selected_category.get()
+        print(f"Zdobyta wybrana kategoria : {sort}")
+
+        if sort == "całość":
+            self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
+                                       f" products_items.unit_of_measure, products_items.quantity,"
+                                       f" products_items.seftystock"
+                                       f" FROM products_items"
+                                       f" ORDER BY name_product")
+            self.product_list_by_category = self.pantry_cursor.fetchall()
+
+        else:
+
+            self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
+                                       f" products_items.unit_of_measure, products_items.quantity,"
+                                       f" products_items.seftystock"
+                                       f" FROM products_items"
+                                       f" WHERE id_kategorie = (select kategorie.id"
+                                       f" FROM kategorie"
+                                       f" WHERE kategoria = '{sort}')"
+                                       f" ORDER BY name_product")
+
+            self.product_list_by_category = self.pantry_cursor.fetchall()
 
         num1 = 3
-        for x in self.all_db_pantry:
-            if x[5] == sort:
+        for x in self.product_list_by_category:
+            self.article = ttk.Label(
+                self.scrollable_frame,
+                text=x[1],
+                style="span_style_os.TLabel",
+            )
 
-                self.article = ttk.Label(
-                    self.scrollable_frame,
-                    text=x[1],
-                    style="span_style_os.TLabel",
-                )
+            self.article_status = ttk.Label(
+                self.scrollable_frame,
+                text=x[3],
+                style="span_style_os.TLabel",
+            )
 
-                self.article_status = ttk.Label(
-                    self.scrollable_frame,
-                    text=x[3],
-                    style="span_style_os.TLabel",
-                )
+            self.article_unit_measure = ttk.Label(
+                self.scrollable_frame,
+                text=x[2],
+                style="span_style_os.TLabel",
+            )
 
-                self.article_unit_measure = ttk.Label(
-                    self.scrollable_frame,
-                    text=x[2],
-                    style="span_style_os.TLabel",
-                )
+            self.new_quantity_article = tk.IntVar(value=0)
+            self.spin_qty =tk.Spinbox(
+                self.scrollable_frame,
+                width=5,
+                from_=0,
+                to=x[3],
+                justify="center",
+                font=("Ink Free", 15),
+                foreground=colour_char_hand,
+                background=colour_paper_hand,
+                borderwidth=2,
+                relief="sunken",
+                textvariable=self.new_quantity_article,
+            )
 
-                self.new_quantity_article = tk.IntVar(value=0)
-                self.spin_qty =tk.Spinbox(
-                    self.scrollable_frame,
-                    width=5,
-                    from_=0,
-                    to=x[3],
-                    justify="center",
-                    font=("Ink Free", 15),
-                    foreground=colour_char_hand,
-                    background=colour_paper_hand,
-                    borderwidth=2,
-                    relief="sunken",
-                    textvariable=self.new_quantity_article,
-                )
+            self.article.grid(column=0, row=num1)
+            self.article_status.grid(column=1, row=num1)
+            self.article_unit_measure.grid(column=2, row=num1, padx=5)
+            self.spin_qty.grid(column=3, row=num1)
 
-                self.article.grid(column=0, row=num1)
-                self.article_status.grid(column=1, row=num1)
-                self.article_unit_measure.grid(column=2, row=num1, padx=5)
-                self.spin_qty.grid(column=3, row=num1)
-
-                self.list_of_transferred_products[x[1]] = self.new_quantity_article
-                num1 += 1
+            self.list_of_transferred_products[x[1]] = self.new_quantity_article
+            num1 += 1
 
     def list_ingradients_approval_button(self):
         self.one_buttom = ttk.Button(
@@ -217,7 +239,6 @@ class PantryShelvesClass(ttk.Frame):
         self.one_buttom.configure(command=self.pantry_status_update, )
 
     def pantry_status_update(self):
-        print("Moduł pantry_status_update został uruchomiony.\n ===== vvv =====")
 
         for name, value in self.list_of_transferred_products.items():
             self.selected_val = value.get()
@@ -228,7 +249,6 @@ class PantryShelvesClass(ttk.Frame):
 
         for name, value in self.list_of_transferred_products.items():
             if value > 0:
-                print(f'drukowanie warunek if spełniane value =  {value}')
 
                 for x in self.all_db_pantry:
                     if x[1] == name:
@@ -237,19 +257,15 @@ class PantryShelvesClass(ttk.Frame):
                         self.new_state = self.state - value
 
                 if name not in self.products_taken_to_the_kitchen:
-                    print("Działa")
+
                     self.products_taken_to_the_kitchen[name] = value
                 else:
                     self.products_taken_to_the_kitchen[name] += value
-
-
 
                 self.pantry_cursor.execute(
                     f"update products_items set quantity = {self.new_state} where id ={self.index_one}")
                 self.pantry_db.commit()
 
-
-        print(self.products_taken_to_the_kitchen)
         self.list_products_transferred()
         self.pantry_db.close()
         self.product.destroy()
@@ -330,10 +346,3 @@ class PantryShelvesClass(ttk.Frame):
 
         webview.create_window("Plik się drukuje",'https://www.youtube.com/watch?v=15nMlfogITw')
         webview.start()
-
-
-
-
-
-
-
