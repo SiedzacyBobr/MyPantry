@@ -31,10 +31,12 @@ class PantryShelvesClass(ttk.Frame):
         )
         self.pantry_cursor = self.pantry_db.cursor()
 
-        self.pantry_cursor.execute(f"select products_items.id, products_items.name_product, "
+        self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product, "
                                    "products_items.unit_of_measure, products_items.quantity, "
-                                   "products_items.seftystock, kategorie.kategoria from products_items "
-                                   "join kategorie on products_items.id_kategorie = kategorie.id")
+                                   "products_items.seftystock, kategorie.kategoria"
+                                   " FROM products_items"
+                                   " JOIN kategorie"
+                                   " ON products_items.id_kategorie = kategorie.id")
 
         self.all_db_pantry = self.pantry_cursor.fetchall()
 
