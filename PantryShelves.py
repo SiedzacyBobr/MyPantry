@@ -3,7 +3,6 @@ from tkinter import ttk
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from Style_constrakt import colour_label_span, colour_char_hand, colour_paper_hand
-import webview
 
 class PantryShelvesClass(ttk.Frame):
     def __init__(self, container, *args, **kwargs,):
@@ -121,7 +120,7 @@ class PantryShelvesClass(ttk.Frame):
         self.button_choise = ttk.Button(
             self.scrollable_frame,
             style="Button_style_os.TButton",
-            text="Sortuj",
+            text="Pokaż",
             command=self.interactive_shelves_in_the_pantry
         )
 
@@ -335,16 +334,3 @@ class PantryShelvesClass(ttk.Frame):
             self.row_value.grid(column=1, row=num3)
 
             num3 += 1
-
-        self.buttom_print = ttk.Button(
-            self.list_freme_transferred,
-            text="Drukuj",
-            style="button_style_handwritten.TButton",
-            command=self.pritnt_list,
-        )
-        self.buttom_print.grid(columnspan=2, row=num3 + 1)
-
-    def pritnt_list(self):
-
-        webview.create_window("Plik się drukuje",'https://www.youtube.com/watch?v=15nMlfogITw')
-        webview.start()

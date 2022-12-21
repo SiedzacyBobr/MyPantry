@@ -1,9 +1,10 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, filedialog
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from Style_constrakt import colour_paper_hand, colour_char_hand
 import webview
+import  win32print, win32api
 
 
 
@@ -122,7 +123,11 @@ class ShoppingList(ttk.Frame):
                 self.third_kolumn_list.grid(column=3, row=1, sticky="EW")
 
     def interactive_shoppnig_list(self):
+        shopping_list_to_do = open('test_print.txt', 'w')
+        shopping_list_to_do.write("Lista zakupów do zrealizowania \n ")
+        shopping_list_to_do.write("Nazwa produktu i ilość szt. \n")
 
+        poz = 1
         num10 = 25
         for x in self.all_db_pantry:
 
@@ -174,6 +179,11 @@ class ShoppingList(ttk.Frame):
             self.list_chack_box_botton[x[1]] = self.selected_option
 
             num10 += 1
+            if x[4] > x[3]:
+                shopping_list_to_do.write(f' {poz}  {x[1]} - {x[4]-x[3]} .szt \n')
+                poz += 1
+
+        shopping_list_to_do.close()
 
     def chack_box_print_list(self):
 
@@ -220,7 +230,6 @@ class ShoppingList(ttk.Frame):
         self.printing_a_completed_shopping_list()
         self.shop_list.destroy()
         self.pantry_db.close()
-
         self.done_load_db()
         self.main_frame_for_the_shopping_list()
         self.scroll_bar_canvas()
@@ -236,11 +245,20 @@ class ShoppingList(ttk.Frame):
 
                 self.action_buttom = ttk.Button(
                     self.shop_list,
-                    text=f"sklep ==> spiżarnia",
+                    text=f"zakupy zrobione i przyniesione sklep ==> spiżarnia",
                     style="button_style_handwritten.TButton",
                 )
-                self.action_buttom.pack(side="bottom", fill="both")
+                self.action_buttom.pack(side="right", expand=True, fill="x")
                 self.action_buttom.configure(command=self.chack_box_print_list)
+
+                self.buttom_print = ttk.Button(
+                    self.shop_list,
+                    text="Drukuj listę zakupów",
+                    style="button_style_handwritten.TButton",
+
+                )
+                self.buttom_print.pack(side="left", expand=True, fill="x")
+                self.buttom_print.configure(command=self.pritnt_list)
                 break
 
     def printing_a_completed_shopping_list(self):
@@ -299,15 +317,15 @@ class ShoppingList(ttk.Frame):
 
             num1 += 1
 
-        self.buttom_print = ttk.Button(
-            self.completed_shopping_list,
-            text="Drukuj",
-            style="button_style_handwritten.TButton",
-            command=self.pritnt_list,
-        )
-        self.buttom_print.grid(columnspan=2, row=num1 + 1)
-
     def pritnt_list(self):
 
-        webview.create_window("Plik się drukuje",'https://www.youtube.com/watch?v=15nMlfogITw')
-        webview.start()
+        printer_name = win32print.GetDefaultPrinter()
+        print(printer_name)
+        
+        file_to_print = filedialog.askopenfilename(
+            initialdir="/test_print.txt",
+            title="Piękny tutuł dla okna drukowania",
+            initialfile="test_print.txt"
+        )
+        if file_to_print:
+            win32api.ShellExecute(0, "print", file_to_print, None, ".", 0)
