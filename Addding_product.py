@@ -32,7 +32,7 @@ class Adding_action_product(ttk.Frame):
 
         self.title_addding_frame = ttk.Label(
             self.addding_conteiner_frame,
-            text="Okienko do dodawanria produktów do spiżarni",
+            text="Okienko do dodawania produktów do spiżarni",
             style="Title_on_add_del_edit.TLabel",
             borderwidth=2,
             relief="solid",
