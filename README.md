@@ -1,9 +1,9 @@
 
-#<h1>My Pantry<h1>
+<h1># My Pantry<h1>
 <p>A simple app to help you manage your home pantry and shopping list.<p>
 
 
-##<h2>Description of the idea<h2>
+<h2>## Description of the idea<h2>
 
 <p>
     Going shopping is a great challenge. 
