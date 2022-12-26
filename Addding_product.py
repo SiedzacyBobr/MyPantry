@@ -41,25 +41,25 @@ class Adding_action_product(ttk.Frame):
 
         self.name_Label = ttk.Label(
             self.addding_conteiner_frame,
-            text="nazwa: ",
+            text="nazwa:",
             style="Comment_on_add_del_edit.TLabel",
         )
         self.unit_Label = ttk.Label(
             self.addding_conteiner_frame,
-            text="jednostka: ",
+            text="jednostka:",
             style="Comment_on_add_del_edit.TLabel",
         )
         self.qty_Label = ttk.Label(
             self.addding_conteiner_frame,
-            text="ilość: ",
+            text="ilość:",
             style="Comment_on_add_del_edit.TLabel",
         )
         self.sefty_Label = ttk.Label(
             self.addding_conteiner_frame,
-            text="żelazny zapas",
+            text="żelazny zapas:",
             style="Comment_on_add_del_edit.TLabel",
         )
-        self.kategoria = ttk.Label(
+        self.category_label = ttk.Label(
             self.addding_conteiner_frame,
             text="kategoria:",
             style="Comment_on_add_del_edit.TLabel",
@@ -84,7 +84,6 @@ class Adding_action_product(ttk.Frame):
         self.unit_Entry = tk.Entry(
             self.addding_conteiner_frame,
             background=colour_paper_hand,
-            width=7,
             justify="center",
             font=("Ink Free", 13),
             borderwidth=2,
@@ -95,7 +94,6 @@ class Adding_action_product(ttk.Frame):
         self.qty_Entry = tk.Entry(
             self.addding_conteiner_frame,
             background=colour_paper_hand,
-            width=5,
             justify="center",
             font=("Ink Free", 13),
             borderwidth=2,
@@ -106,33 +104,22 @@ class Adding_action_product(ttk.Frame):
         self.sefty_Entry = tk.Entry(
             self.addding_conteiner_frame,
             background=colour_paper_hand,
-            width=5,
             justify="center",
             font=("Ink Free", 13),
             borderwidth=2,
             relief="sunken",
             foreground=colour_char_hand,
         )
-        # self.kategorii_Entry = tk.Entry(
-        #     self.addding_conteiner_frame,
-        #     background=colour_paper_hand,
-        #     width=5,
-        #     justify="center",
-        #     font=("Ink Free", 13),
-        #     borderwidth=2,
-        #     relief="sunken",
-        #     foreground=colour_char_hand,
-        # )
-        self.wybrana_kategoria = tk.StringVar()
-        self.kategorii_Entry = tk.Spinbox(
+
+        self.selected_category = tk.StringVar()
+        self.category_Entry = tk.Spinbox(
             self.addding_conteiner_frame,
             values=all_kategoria,
-            textvariable=self.wybrana_kategoria,
+            textvariable=self.selected_category,
             font=('Ink Free', 13),
             borderwidth=2,
             relief="sunken",
             justify="center",
-            width=10,
         )
         self.insert_buttom = ttk.Button(
             self.addding_conteiner_frame,
@@ -141,19 +128,19 @@ class Adding_action_product(ttk.Frame):
             style="Buttom_on_add_del_edit.TButton",
         )
 
-        self.title_addding_frame.grid(columnspan=11, row=0, sticky="ew")
-        self.name_Label.grid(column=0, row=1)
-        self.name_Entry.grid(column=1, row=1)
-        self.unit_Label.grid(column=2, row=1)
-        self.unit_Entry.grid(column=3, row=1)
-        self.qty_Label.grid(column=4, row=1)
-        self.qty_Entry.grid(column=5, row=1)
-        self.sefty_Label.grid(column=6, row=1)
-        self.sefty_Entry.grid(column=7, row=1)
-        self.kategoria.grid(column=8, row=1)
-        self.kategorii_Entry.grid(column=9, row=1)
-        self.dystans.grid(column=10, row=1)
-        self.insert_buttom.grid(columnspan=11, row=2, sticky="EW")
+        self.title_addding_frame.grid(columnspan=2, row=0, sticky="ew")
+        self.name_Label.grid(column=0, row=1, sticky="e")
+        self.name_Entry.grid(column=1, row=1, sticky="ew")
+        self.unit_Label.grid(column=0, row=2, sticky="e")
+        self.unit_Entry.grid(column=1, row=2, sticky="ew")
+        self.qty_Label.grid(column=0, row=3, sticky="e")
+        self.qty_Entry.grid(column=1, row=3, sticky="ew")
+        self.sefty_Label.grid(column=0, row=4, sticky="e")
+        self.sefty_Entry.grid(column=1, row=4, sticky="ew")
+        self.category_label.grid(column=0, row=5, sticky="e")
+        self.category_Entry.grid(column=1, row=5, sticky="ew")
+        self.dystans.grid(column=0, row=6)
+        self.insert_buttom.grid(columnspan=2, row=7, sticky="EW")
 
     def action_add_product(self):
 
@@ -161,7 +148,7 @@ class Adding_action_product(ttk.Frame):
         self.unit = self.unit_Entry.get()
         self.qty = self.qty_Entry.get()
         self.sefty = self.sefty_Entry.get()
-        self.kate = self.kategorii_Entry.get()
+        self.kate = self.category_Entry.get()
 
         pantry_cursor.execute(
             f"INSERT INTO mypantry.kategorie (kategoria) "

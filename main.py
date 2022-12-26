@@ -9,36 +9,11 @@ try:
 except:
     pass
 
-
 class MainPantryWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__( *args, **kwargs)
 
-        self.manu_app()
-        self.main_container()
-        self.info_for_user()
-        self.all_frames_create()
-        self.hello_user = None
-        self.body_pantry = None
-        self.stacking_conteiners()
-        style_constrakt()
-
-    def manu_app(self):
-
-        self.main_menu = tk.Menu(self)
-
-        self.main_menu.add_command(label="Dodawanie", command=self.addding_conteiner)
-        self.main_menu.add_command(label="Usuwanie", command=self.delete_conteiner)
-        self.main_menu.add_command(label="Edytowanie", command=self.editing_conteiner)
-        self.main_menu.add_command(label="Spiżarnia", command=self.stacking_conteiners)
-
-        self.config(menu=self.main_menu)
-
-    def main_container(self):
-
         self.title("Domowa Spiżarnia")
-
-    def info_for_user(self):
 
         self.body_pantry = tk.Frame(
             self,
@@ -51,6 +26,28 @@ class MainPantryWindow(tk.Tk):
         )
         self.body_pantry.grid(column=0, row=0)
         self.body_pantry.grid_propagate(0)
+
+        self.manu_app()
+        self.info_for_user()
+        self.all_frames_create()
+        self.hello_user = None
+
+        self.pantry_conteiners()
+        style_constrakt()
+
+    def manu_app(self):
+
+        self.main_menu = tk.Menu(self)
+
+        self.main_menu.add_command(label="Zakupy", command=self.shopping_conteiners)
+        self.main_menu.add_command(label="Spiżarnia", command=self.pantry_conteiners)
+        self.main_menu.add_command(label="Dodawanie", command=self.addding_conteiner)
+        self.main_menu.add_command(label="Usuwanie", command=self.delete_conteiner)
+        self.main_menu.add_command(label="Edytowanie", command=self.editing_conteiner)
+
+        self.config(menu=self.main_menu)
+
+    def info_for_user(self):
 
         self.hello_user = ttk.Label(
             self.body_pantry,
@@ -72,7 +69,6 @@ class MainPantryWindow(tk.Tk):
         self.hello_user.grid(column=0, row=0, sticky="ew")
         self.reload_buttom.grid(column=0, row=1)
 
-
     def update_main(self):
         self.destroy()
         root = MainPantryWindow()
@@ -80,31 +76,35 @@ class MainPantryWindow(tk.Tk):
 
     def all_frames_create(self):
 
-        self.main_start_conteiner = tk.Frame(self)
+        self.pantry_conteiner = tk.Frame(self)
+        self.shopping_conteiner = tk.Frame(self)
         self.addding_product_conteiner = tk.Frame(self)
         self.delete_product_conteiner = tk.Frame(self)
         self.editing_product_conteiner = tk.Frame(self)
 
-    def stacking_conteiners(self):
+    def pantry_conteiners(self):
 
-        self.czyszczenie_okna()
-
-        self.main_start_conteiner.grid(column=0, row=1)
+        self.clean_window()
+        self.pantry_conteiner.grid(column=0, row=1)
 
         area_shelves = PantryShelves.PantryShelvesClass(
-            self.main_start_conteiner,
+            self.pantry_conteiner,
             padding=10,
         )
-        area_shelves.grid(column=0, row=1)
+        area_shelves.grid()
+
+    def shopping_conteiners(self):
+        self.clean_window()
+        self.shopping_conteiner.grid(column=0, row=1)
 
         area_shopping = ShoppingList.ShoppingList(
-            self.main_start_conteiner,
+            self.shopping_conteiner,
             padding=10,
         )
-        area_shopping.grid(column=0, row=2)
+        area_shopping.grid()
 
     def addding_conteiner(self):
-        self.czyszczenie_okna()
+        self.clean_window()
 
         self.addding_product_conteiner.grid(column=0, row=1)
 
@@ -112,10 +112,10 @@ class MainPantryWindow(tk.Tk):
             self.addding_product_conteiner,
             padding=(10, 10),
         )
-        addding_action.grid(column=0, row=0)
+        addding_action.grid()
 
     def delete_conteiner(self):
-        self.czyszczenie_okna()
+        self.clean_window()
 
         self.delete_product_conteiner.grid(column=0, row=1)
 
@@ -123,18 +123,19 @@ class MainPantryWindow(tk.Tk):
             self.delete_product_conteiner,
             padding=(10, 10),
         )
-        delete_action.grid(column=0, row=0)
+        delete_action.grid()
 
     def editing_conteiner(self):
-        self.czyszczenie_okna()
+        self.clean_window()
 
         self.editing_product_conteiner.grid(column=0, row=1)
 
         editing_action = Editing_product.Editing_action_product(self.editing_product_conteiner, padding=(10, 10))
-        editing_action.grid(column=0, row=0)
+        editing_action.grid()
 
-    def czyszczenie_okna(self):
-        self.main_start_conteiner.grid_forget()
+    def clean_window(self):
+        self.shopping_conteiner.grid_forget()
+        self.pantry_conteiner.grid_forget()
         self.addding_product_conteiner.grid_forget()
         self.delete_product_conteiner.grid_forget()
         self.editing_product_conteiner.grid_forget()

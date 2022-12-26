@@ -12,6 +12,12 @@ pantry_cursor.execute("select * from mypantry.products_items")
 all_db_pantry = pantry_cursor.fetchall()
 
 
+pantry_cursor.execute("SELECT kategoria"
+                      " FROM mypantry.kategorie"
+                      " WHERE kategoria != 'całość'")
+all_category = pantry_cursor.fetchall()
+
+
 class Editing_action_product(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
@@ -58,6 +64,7 @@ class Editing_action_product(ttk.Frame):
             borderwidth=2,
             relief="sunken",
         )
+
 #relief: "flat", "raised","sunken","groove", "ridge".
 
 
@@ -73,7 +80,7 @@ class Editing_action_product(ttk.Frame):
         self.product_select.grid(column=1, row=1,)
         self.editing_buttom.grid(columnspan=2, row=2, sticky="EW")
 
-    def edit_product_in_my_pantry(self):
+    def edit_product_in_my_pantry(self,):
 
         self.name_product.destroy()
         self.editing_buttom.destroy()
@@ -97,6 +104,7 @@ class Editing_action_product(ttk.Frame):
                 self.unit_to_edit = tk.StringVar(value=x[2])
                 self.qty_to_edit = tk.IntVar(value=x[3])
                 self.sefty_to_edit = tk.IntVar(value=x[4])
+                self.selected_category = tk.StringVar()
 
                 self.name_Label = ttk.Label(
                     self.editing_conteiner_frame,
@@ -118,6 +126,12 @@ class Editing_action_product(ttk.Frame):
                     text="żelazny zapas:",
                     style="Comment_on_add_del_edit.TLabel",
                 )
+                self.category_label = ttk.Label(
+                    self.editing_conteiner_frame,
+                    text="kategoria:",
+                    style="Comment_on_add_del_edit.TLabel",
+                )
+
                 self.dystans = ttk.Label(
                     self.editing_conteiner_frame,
                     text=" ",
@@ -135,11 +149,12 @@ class Editing_action_product(ttk.Frame):
                     relief="sunken",
                     foreground=colour_char_hand,
                 )
+
                 self.unit_editing = tk.Entry(
                     self.editing_conteiner_frame,
                     textvariable=self.unit_to_edit,
                     background=colour_paper_hand,
-                    width=7,
+                    # width=7,
                     justify="center",
                     font=("Ink Free", 13),
                     borderwidth=2,
@@ -150,7 +165,7 @@ class Editing_action_product(ttk.Frame):
                     self.editing_conteiner_frame,
                     textvariable=self.qty_to_edit,
                     background=colour_paper_hand,
-                    width=5,
+                    # width=5,
                     justify="center",
                     font=("Ink Free", 13),
                     borderwidth=2,
@@ -161,7 +176,7 @@ class Editing_action_product(ttk.Frame):
                     self.editing_conteiner_frame,
                     textvariable=self.sefty_to_edit,
                     background=colour_paper_hand,
-                    width=5,
+                    # width=5,
                     justify="center",
                     font=("Ink Free", 13),
                     borderwidth=2,
@@ -169,24 +184,38 @@ class Editing_action_product(ttk.Frame):
                     foreground=colour_char_hand,
                 )
 
+                self.category_entry = tk.Spinbox(
+                    self.editing_conteiner_frame,
+                    values=all_category,
+                    textvariable=self.selected_category,
+                    font=('Ink Free', 13),
+                    borderwidth=2,
+                    relief="sunken",
+                    justify="center",
+                )
+
                 self.editing_buttom_all = ttk.Button(
                     self.editing_conteiner_frame,
                     text="Edytowanie produktu",
-                    command=self.editing_all,
                     style="Buttom_on_add_del_edit.TButton",
+                    command=self.editing_all,
                 )
+                # self.editing_buttom_all.bind("<Return>", self.editing_all)
+                # self.editing_buttom_all.bind("<Button-1>", self.editing_all)
 
-                self.title_editing_freme.grid(columnspan=9, row=0, sticky="EW")
-                self.name_Label.grid(column=0, row=4)
-                self.name_editing.grid(column=1, row=4)
-                self.unit_Label.grid(column=2, row=4)
-                self.unit_editing.grid(column=3, row=4)
-                self.qty_Label.grid(column=4, row=4)
-                self.qty_editing.grid(column=5, row=4)
-                self.sefty_Label.grid(column=6, row=4)
-                self.sefty_editing.grid(column=7, row=4)
-                self.dystans.grid(column=8, row=4)
-                self.editing_buttom_all.grid(columnspan=9, row=5, sticky="EW")
+                self.title_editing_freme.grid(columnspan=2, row=0, sticky="EW")
+                self.name_Label.grid(column=0, row=4, sticky="e")
+                self.name_editing.grid(column=1, row=4, sticky="EW")
+                self.unit_Label.grid(column=0, row=5, sticky="e")
+                self.unit_editing.grid(column=1, row=5, sticky="EW")
+                self.qty_Label.grid(column=0, row=6, sticky="e")
+                self.qty_editing.grid(column=1, row=6, sticky="EW")
+                self.sefty_Label.grid(column=0, row=7, sticky="e")
+                self.sefty_editing.grid(column=1, row=7, sticky="EW")
+                self.category_label.grid(column=0, row=8, sticky="e")
+                self.category_entry.grid(column=1, row=8, sticky="ew")
+                self.dystans.grid(column=0, row=9)
+                self.editing_buttom_all.grid(columnspan=2, row=10, sticky="EW")
 
     def editing_all(self):
 
@@ -199,6 +228,9 @@ class Editing_action_product(ttk.Frame):
         self.qty_editing.destroy()
         self.sefty_Label.destroy()
         self.sefty_editing.destroy()
+        self.category_label.destroy()
+        self.category_entry.destroy()
+
         self.dystans.destroy()
         self.editing_buttom_all.destroy()
 
@@ -207,6 +239,7 @@ class Editing_action_product(ttk.Frame):
         self.unit = self.unit_to_edit.get()
         self.qty = self.qty_to_edit.get()
         self.sefty = self.sefty_to_edit.get()
+        self.kate = self.selected_category.get()
 
         pantry_cursor.execute(
             f"UPDATE mypantry.products_items SET name_product = '{self.name}' WHERE id = {self.id}"
@@ -228,13 +261,17 @@ class Editing_action_product(ttk.Frame):
         )
         pantry_db.commit()
 
+        pantry_cursor.execute(
+            f"UPDATE mypantry.products_items SET id_kategorie= (select id from mypantry.kategorie where kategoria = '{self.kate}') WHERE id = {self.id}"
+        )
+        pantry_db.commit()
+
         self.title_editing_freme = ttk.Label(
             self.editing_conteiner_frame,
             text="Wybór produktu do edycji",
             style="Title_on_add_del_edit.TLabel",
             width=46,
         )
-
 
         self.masage_label = ttk.Label(
             self.editing_conteiner_frame,

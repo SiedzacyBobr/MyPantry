@@ -1,10 +1,9 @@
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, CENTER
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from Style_constrakt import colour_paper_hand, colour_char_hand
-import webview
-import  win32print, win32api
+import win32print, win32api
 
 
 
@@ -46,7 +45,7 @@ class ShoppingList(ttk.Frame):
             borderwidth=1,
             relief="solid",
             width=691,
-            height=350,
+            height=450,
             padx=10,
             pady=10,
         )
@@ -77,7 +76,7 @@ class ShoppingList(ttk.Frame):
 
 
     def main_frame_title_shopping_list(self):
-
+        len_products_to_shopping_list = 0
         for x in self.all_db_pantry:
             if x[4] > x[3]:
 
@@ -85,9 +84,19 @@ class ShoppingList(ttk.Frame):
                     self.scrollable_frame,
                     text="Lista Zakupów ",
                     style="titile_frame_handwritten.TLabel",
-                    width = 46
+                    width=46,
                 )
                 self.items_products.grid(columnspan=4, row=0, sticky="EW")
+                len_products_to_shopping_list +=1
+
+        if len_products_to_shopping_list == 0:
+            self.no_shopping_list = ttk.Label(
+                self.scrollable_frame,
+                text="Brak listy zakupów \n - w spiżarni niczego nie brakuje",
+                style="titile_frame_handwritten.TLabel",
+                width=46,
+            )
+            self.no_shopping_list.grid(columnspan=4, row=0, sticky="EW")
 
     def name_column_shopping_list(self):
 
@@ -123,7 +132,7 @@ class ShoppingList(ttk.Frame):
                 self.third_kolumn_list.grid(column=3, row=1, sticky="EW")
 
     def interactive_shoppnig_list(self):
-        shopping_list_to_do = open('test_print.txt', 'w')
+        shopping_list_to_do = open('shopping_list.txt', 'w')
         shopping_list_to_do.write("Lista zakupów do zrealizowania \n ")
         shopping_list_to_do.write("Nazwa produktu i ilość szt. \n")
 
@@ -323,9 +332,9 @@ class ShoppingList(ttk.Frame):
         print(printer_name)
         
         file_to_print = filedialog.askopenfilename(
-            initialdir="/test_print.txt",
+            initialdir="/ shopping_list.txt",
             title="Piękny tutuł dla okna drukowania",
-            initialfile="test_print.txt"
+            initialfile="shopping_list.txt"
         )
         if file_to_print:
             win32api.ShellExecute(0, "print", file_to_print, None, ".", 0)

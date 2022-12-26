@@ -12,9 +12,22 @@ class PantryShelvesClass(ttk.Frame):
         self.recipe_list = {}
         self.products_taken_to_the_kitchen = {}
         self.set_kategorii = set()
+        self.ilosc_odslon_test = 0
+
+        self.product = tk.Frame(
+            self,
+            background=colour_label_span,
+            width=691,
+            height=450,
+            borderwidth=1,
+            relief="solid",
+            padx=10,
+            pady=10,
+        )
+        self.product.pack()
+        self.product.pack_propagate(0)
 
         self.done_load_db()
-        self.main_frame_shelves()
         self.scroll_bar_canvas()
         self.main_frame_title_shelves()
         self.shelf_column_name()
@@ -43,21 +56,6 @@ class PantryShelvesClass(ttk.Frame):
                                    " FROM mypantry.kategorie"
                                    " WHERE kategoria != 'nowa'")
         self.category_list = self.pantry_cursor.fetchall()
-
-    def main_frame_shelves(self):
-
-        self.product = tk.Frame(
-            self,
-            background=colour_label_span,
-            width=691,
-            height=350,
-            borderwidth=1,
-            relief="solid",
-            padx=10,
-            pady=10,
-        )
-        self.product.pack()
-        self.product.pack_propagate(0)
 
     def scroll_bar_canvas(self):
         self.canvas_test = tk.Canvas(
@@ -162,73 +160,90 @@ class PantryShelvesClass(ttk.Frame):
 
     def interactive_shelves_in_the_pantry(self):
 
-        self.product_list_by_category = []
-        sort = self.selected_category.get()
-        print(f"Zdobyta wybrana kategoria : {sort}")
-
-        if sort == "całość":
-            self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
-                                       f" products_items.unit_of_measure, products_items.quantity,"
-                                       f" products_items.seftystock"
-                                       f" FROM products_items"
-                                       f" ORDER BY name_product")
-            self.product_list_by_category = self.pantry_cursor.fetchall()
+        if self.ilosc_odslon_test > 0:
+            print(f"no pięknie to już {self.ilosc_odslon_test}!!! czas na usuwanie starych labelek")
+            self.article.destroy()
+            self.article_status.destroy()
+            self.article_unit_measure.destroy()
+            self.spin_qty.destroy()
+            print(f" zerorawnie zmiennej pomocnej o watośći {self.ilosc_odslon_test}")
+            self.ilosc_odslon_test = 0
+            print(f" wyzerowana wartość zmiennej pomocniczej {self.ilosc_odslon_test}")
+            print("uruchamianie ponownie funkcji")
+            self.interactive_shelves_in_the_pantry()
 
         else:
+            print(f"to jest pierwsza pętla wartość zmiennej = {self.ilosc_odslon_test}")
 
-            self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
-                                       f" products_items.unit_of_measure, products_items.quantity,"
-                                       f" products_items.seftystock"
-                                       f" FROM products_items"
-                                       f" WHERE id_kategorie = (select kategorie.id"
-                                       f" FROM kategorie"
-                                       f" WHERE kategoria = '{sort}')"
-                                       f" ORDER BY name_product")
+            self.product_list_by_category = []
+            sort = self.selected_category.get()
+            print(f"Zdobyta wybrana kategoria : {sort}")
 
-            self.product_list_by_category = self.pantry_cursor.fetchall()
+            if sort == "całość":
+                self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
+                                           f" products_items.unit_of_measure, products_items.quantity,"
+                                           f" products_items.seftystock"
+                                           f" FROM products_items"
+                                           f" ORDER BY name_product")
+                self.product_list_by_category = self.pantry_cursor.fetchall()
 
-        num1 = 3
-        for x in self.product_list_by_category:
-            self.article = ttk.Label(
-                self.scrollable_frame,
-                text=x[1],
-                style="span_style_os.TLabel",
-            )
+            else:
 
-            self.article_status = ttk.Label(
-                self.scrollable_frame,
-                text=x[3],
-                style="span_style_os.TLabel",
-            )
+                self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
+                                           f" products_items.unit_of_measure, products_items.quantity,"
+                                           f" products_items.seftystock"
+                                           f" FROM products_items"
+                                           f" WHERE id_kategorie = (select kategorie.id"
+                                           f" FROM kategorie"
+                                           f" WHERE kategoria = '{sort}')"
+                                           f" ORDER BY name_product")
 
-            self.article_unit_measure = ttk.Label(
-                self.scrollable_frame,
-                text=x[2],
-                style="span_style_os.TLabel",
-            )
+                self.product_list_by_category = self.pantry_cursor.fetchall()
 
-            self.new_quantity_article = tk.IntVar(value=0)
-            self.spin_qty =tk.Spinbox(
-                self.scrollable_frame,
-                width=5,
-                from_=0,
-                to=x[3],
-                justify="center",
-                font=("Ink Free", 15),
-                foreground=colour_char_hand,
-                background=colour_paper_hand,
-                borderwidth=2,
-                relief="sunken",
-                textvariable=self.new_quantity_article,
-            )
+            num1 = 3
+            for x in self.product_list_by_category:
+                self.article = ttk.Label(
+                    self.scrollable_frame,
+                    text=x[1],
+                    style="span_style_os.TLabel",
+                )
 
-            self.article.grid(column=0, row=num1)
-            self.article_status.grid(column=1, row=num1)
-            self.article_unit_measure.grid(column=2, row=num1, padx=5)
-            self.spin_qty.grid(column=3, row=num1)
+                self.article_status = ttk.Label(
+                    self.scrollable_frame,
+                    text=x[3],
+                    style="span_style_os.TLabel",
+                )
 
-            self.list_of_transferred_products[x[1]] = self.new_quantity_article
-            num1 += 1
+                self.article_unit_measure = ttk.Label(
+                    self.scrollable_frame,
+                    text=x[2],
+                    style="span_style_os.TLabel",
+                )
+
+                self.new_quantity_article = tk.IntVar(value=0)
+                self.spin_qty =tk.Spinbox(
+                    self.scrollable_frame,
+                    width=5,
+                    from_=0,
+                    to=x[3],
+                    justify="center",
+                    font=("Ink Free", 15),
+                    foreground=colour_char_hand,
+                    background=colour_paper_hand,
+                    borderwidth=2,
+                    relief="sunken",
+                    textvariable=self.new_quantity_article,
+                )
+
+                self.article.grid(column=0, row=num1)
+                self.article_status.grid(column=1, row=num1)
+                self.article_unit_measure.grid(column=2, row=num1, padx=5)
+                self.spin_qty.grid(column=3, row=num1)
+
+                self.list_of_transferred_products[x[1]] = self.new_quantity_article
+                num1 += 1
+
+            self.ilosc_odslon_test +=1
 
     def list_ingradients_approval_button(self):
         self.one_buttom = ttk.Button(
