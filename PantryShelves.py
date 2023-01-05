@@ -27,11 +27,22 @@ class PantryShelvesClass(ttk.Frame):
         self.product.pack()
         self.product.pack_propagate(0)
 
+        self.tytul_wybor_nazwy_kolumn = tk.Frame(self.product)
+        self.tytul_wybor_nazwy_kolumn.pack()
+
+        self.wyswietlana_lista = tk.Frame(self.product)
+        self.wyswietlana_lista.pack()
+
         self.done_load_db()
+        self.wyswietlana_lista_dlaSwybor()
         self.scroll_bar_canvas()
         self.main_frame_title_shelves()
         self.shelf_column_name()
         self.list_ingradients_approval_button()
+
+    def wyswietlana_lista_dlaSwybor(self):
+        self.wyswietlana_lista = tk.Frame(self.product)
+        self.wyswietlana_lista.pack()
 
     def done_load_db(self):
 
@@ -59,17 +70,19 @@ class PantryShelvesClass(ttk.Frame):
 
     def scroll_bar_canvas(self):
         self.canvas_test = tk.Canvas(
-            self.product,
-            background=colour_label_span
+            self.wyswietlana_lista,
+            background=colour_label_span,
+            width=618,
         )
 
         self.scrollable_frame = tk.Frame(
             self.canvas_test,
-            background=colour_label_span
+            background=colour_label_span,
+            width=618,
         )
 
         self.croll_bar = ttk.Scrollbar(
-            self.product,
+            self.wyswietlana_lista,
             orient="vertical",
             command=self.canvas_test.yview
         )
@@ -87,7 +100,7 @@ class PantryShelvesClass(ttk.Frame):
     def main_frame_title_shelves(self):
 
         self.shelf = ttk.Label(
-            self.scrollable_frame,
+            self.tytul_wybor_nazwy_kolumn,
             text="Stan Spiżarni",
             style="titile_frame_os.TLabel",
             borderwidth=2,
@@ -97,14 +110,14 @@ class PantryShelvesClass(ttk.Frame):
         # relief: "flat", "raised","sunken","groove", "ridge".
 
         self.kategoria = ttk.Label(
-            self.scrollable_frame,
+            self.tytul_wybor_nazwy_kolumn,
             text="wybór kategorii: ",
             style="span_style_os.TLabel",
         )
 
         self.selected_category = tk.StringVar()
         self.product_select = tk.Spinbox(
-            self.scrollable_frame,
+            self.tytul_wybor_nazwy_kolumn,
             values=self.category_list,
             textvariable=self.selected_category,
             font=("Courier New", 15),
@@ -116,10 +129,10 @@ class PantryShelvesClass(ttk.Frame):
         )
 
         self.button_choise = ttk.Button(
-            self.scrollable_frame,
+            self.tytul_wybor_nazwy_kolumn,
             style="Button_style_os.TButton",
             text="Pokaż",
-            command=self.interactive_shelves_in_the_pantry
+            command=self.interactive_shelves_in_the_pantry,
         )
 
         self.shelf.grid(columnspan=4, row=0, sticky="EW")
@@ -130,27 +143,31 @@ class PantryShelvesClass(ttk.Frame):
     def shelf_column_name(self):
 
         self.first_kolumn = ttk.Label(
-            self.scrollable_frame,
+            self.tytul_wybor_nazwy_kolumn,
             text="Produktu",
             style="column_style_os.TLabel",
+            width=15,
         )
 
         self.second_kolumn = ttk.Label(
-            self.scrollable_frame,
+            self.tytul_wybor_nazwy_kolumn,
             text="Stan",
             style="column_style_os.TLabel",
+            width=7,
         )
 
         self.third_kolumn = ttk.Label(
-            self.scrollable_frame,
+            self.tytul_wybor_nazwy_kolumn,
             text="Jednostka",
             style="column_style_os.TLabel",
+            width=10,
         )
 
         self.fourth_kolumn = ttk.Label(
-            self.scrollable_frame,
+            self.tytul_wybor_nazwy_kolumn,
             text="ile szt.?",
             style="column_style_os.TLabel",
+            width=10,
         )
 
         self.first_kolumn.grid(column=0, row=2, sticky="EW")
@@ -160,24 +177,21 @@ class PantryShelvesClass(ttk.Frame):
 
     def interactive_shelves_in_the_pantry(self):
 
+        self.button_choise["text"] = "Wyczyść"
+
         if self.ilosc_odslon_test > 0:
-            print(f"no pięknie to już {self.ilosc_odslon_test}!!! czas na usuwanie starych labelek")
-            self.article.destroy()
-            self.article_status.destroy()
-            self.article_unit_measure.destroy()
-            self.spin_qty.destroy()
-            print(f" zerorawnie zmiennej pomocnej o watośći {self.ilosc_odslon_test}")
+            self.wyswietlana_lista.destroy()
+
+            self.wyswietlana_lista_dlaSwybor()
+            self.scroll_bar_canvas()
+            self.main_frame_title_shelves()
+            self.shelf_column_name()
             self.ilosc_odslon_test = 0
-            print(f" wyzerowana wartość zmiennej pomocniczej {self.ilosc_odslon_test}")
-            print("uruchamianie ponownie funkcji")
-            self.interactive_shelves_in_the_pantry()
 
         else:
-            print(f"to jest pierwsza pętla wartość zmiennej = {self.ilosc_odslon_test}")
 
             self.product_list_by_category = []
             sort = self.selected_category.get()
-            print(f"Zdobyta wybrana kategoria : {sort}")
 
             if sort == "całość":
                 self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
@@ -200,30 +214,39 @@ class PantryShelvesClass(ttk.Frame):
 
                 self.product_list_by_category = self.pantry_cursor.fetchall()
 
+
             num1 = 3
             for x in self.product_list_by_category:
+
+                self.nazwa_artukulu = x[1]
+                self.stan_magazynowy = x[3]
+                self.jednostka_mary = x[2]
+
                 self.article = ttk.Label(
                     self.scrollable_frame,
-                    text=x[1],
+                    text=self.nazwa_artukulu,
                     style="span_style_os.TLabel",
+                    width=20,
                 )
 
                 self.article_status = ttk.Label(
                     self.scrollable_frame,
-                    text=x[3],
+                    text=self.stan_magazynowy,
                     style="span_style_os.TLabel",
+                    width=11,
                 )
 
                 self.article_unit_measure = ttk.Label(
                     self.scrollable_frame,
-                    text=x[2],
+                    text=self.jednostka_mary,
                     style="span_style_os.TLabel",
+                    width=16,
                 )
 
                 self.new_quantity_article = tk.IntVar(value=0)
                 self.spin_qty =tk.Spinbox(
                     self.scrollable_frame,
-                    width=5,
+                    width=9,
                     from_=0,
                     to=x[3],
                     justify="center",
@@ -260,8 +283,6 @@ class PantryShelvesClass(ttk.Frame):
             self.selected_val = value.get()
             self.name_product = name
             self.list_of_transferred_products[self.name_product] = self.selected_val
-            print(self.name_product, self.selected_val)
-
 
         for name, value in self.list_of_transferred_products.items():
             if value > 0:
