@@ -30,15 +30,4 @@
     which can then by printed and taken to the shops 
 </p>
 
-<img src="/Images/first_window.jpg" alt="First window">
-<img src="/Images/show_all_products.jpg" alt="Show all products from pantry.">
-<img src="/Images/show_category.jpg" alt="Show category products from pantry.">
-<img src="/Images/add_products.jpg" alt="Add produducts to the pantry.">
-<img src="/Images/show_all_products.jpg" alt="Show all products from pantry.">
-<img src="/Images/delete_product.jpg" alt="Delete products in pantry.">
-<img src="/Images/selection_to_edit.jpg" alt="Pantry selection for editing.">
-<img src="/Images/editing_product.jpg" alt="Editing a product.">
-<img src="/Images/shoping_list.jpg" alt="Shoping list.">
-
-
 

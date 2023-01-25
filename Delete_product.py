@@ -1,9 +1,8 @@
 import tkinter as tk
-from tkinter import ttk, N, S, E, NS, CENTER
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
 from LenList import name_all_pantry
-from Style_constrakt import colour_paper_hand, colour_label_span
+from Style_constrakt import *
 
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
@@ -22,9 +21,8 @@ class Delete_action_product(ttk.Frame):
 
         self.delete_conteiner_frame = tk.Frame(
             self,
-            background=colour_label_span,
-            borderwidth=1,
-            relief="solid",
+            background=colour_background,
+            relief="flat",
             padx=10,
             pady=10,
         )
@@ -33,9 +31,8 @@ class Delete_action_product(ttk.Frame):
         self.title_delete_freme = ttk.Label(
             self.delete_conteiner_frame,
             text="Wybór produktu do usunięcia",
-            style="Title_on_add_del_edit.TLabel",
-            borderwidth=2,
-            relief="solid",
+            style="title.TLabel",
+            relief="flat",
             width=46,
         )
 
@@ -43,8 +40,8 @@ class Delete_action_product(ttk.Frame):
 
         self.name_product = ttk.Label(
             self.delete_conteiner_frame,
-            text="Produkt do usunięcia: ",
-            style="Comment_on_add_del_edit.TLabel",
+            text="Do usunięcia: ",
+            style="background.TLabel",
         )
 
         self.product = tk.StringVar()
@@ -52,23 +49,23 @@ class Delete_action_product(ttk.Frame):
             self.delete_conteiner_frame,
             values=self.name_all_product,
             textvariable=self.product,
-            font=("Courier New", 15),
+            font=("Courier New", 13),
             justify="center",
-            background=colour_paper_hand,
-            borderwidth=2,
-            relief="sunken",
+            background=colour_board,
+            relief="flat",
+            width=20,
         )
         self.delete_buttom = ttk.Button(
             self.delete_conteiner_frame,
-            text="Usuwanie produktu",
-            style="Buttom_on_add_del_edit.TButton",
+            text="Usuń",
+            style="button.TButton",
             command=self.delete_product_from_my_pantry,
         )
 
-        self.title_delete_freme.grid(columnspan=2, row=0, sticky="EW")
+        self.title_delete_freme.grid(columnspan=3, row=0, sticky="EW")
         self.name_product.grid(column=0, row=1)
         self.product_select.grid(column=1, row=1)
-        self.delete_buttom.grid(columnspan=2, row=2, sticky="EW")
+        self.delete_buttom.grid(column=2, row=1, sticky="E")
 
     def delete_product_from_my_pantry(self):
 
@@ -81,7 +78,7 @@ class Delete_action_product(ttk.Frame):
         self.masage_label = ttk.Label(
             self.delete_conteiner_frame,
             text=f' Produkt: {self.name_delete_product} - został usunięty z spiżarni',
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
 
         self.masage_label.grid(column=1, row=1)

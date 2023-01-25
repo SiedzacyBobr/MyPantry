@@ -6,7 +6,7 @@ from Style_constrakt import colour_background, colour_label_verse, colour_board,
 import win32print, win32api
 
 
-class ShoppingList(ttk.Frame):
+class ShoppingDone(ttk.Frame):
     def __init__(self, container, *args, **kwargs):
         super().__init__(container, *args, **kwargs)
 
@@ -30,26 +30,31 @@ class ShoppingList(ttk.Frame):
             self.shop_list_window,
             background=colour_background,
         )
-        self.shoping_is_dane = tk.Frame(
-            self.shop_list_window,
-            background=colour_background,
-        )
+
         self.shoping_list_todo = tk.Frame(
         self.shop_list_window,
         background=colour_board,
         )
 
+        self.shoping_is_dane = tk.Frame(
+            self.shop_list_window,
+            background=colour_background,
+        )
+
+
         self.shop_list_window.grid(column=0, row=0)
         self.shop_list_window.pack_propagate(0)
         self.title_column_end_action.grid(column=0, row=1)
-        self.shoping_list_todo.grid(column=0, row=3)
-        self.shoping_is_dane.grid(column=0, row=2)
+        self.shoping_list_todo.grid(column=0, row=2)
+        self.shoping_is_dane.grid(column=0, row=3)
 
         self.done_load_db()
         self.scroll_bar_canvas()
         self.main_frame_title_shopping_list()
         self.name_column_shopping_list()
         self.interactive_shoppnig_list()
+        self.selection_list_approval_button()
+
 
     def done_load_db(self):
         self.pantry_db = mysql.connector.connect(
@@ -68,7 +73,7 @@ class ShoppingList(ttk.Frame):
         self.canvas_test = tk.Canvas(
             self.shoping_list_todo,
             background=colour_label_verse,
-            width=450,
+            width=630,
         )
 
         self.scrollable_frame = tk.Frame(
@@ -93,6 +98,7 @@ class ShoppingList(ttk.Frame):
         self.canvas_test.pack(side="top", fill="both", expand=True)
 
 
+
     def main_frame_title_shopping_list(self):
         len_products_to_shopping_list = 0
         for x in self.all_db_pantry:
@@ -100,11 +106,11 @@ class ShoppingList(ttk.Frame):
 
                 self.items_products = ttk.Label(
                     self.title_column_end_action,
-                    text="Lista Zakupów do zrealizawania",
+                    text="Zakupy zrealizowane",
                     style="title.TLabel",
                     width=40,
                 )
-                self.items_products.grid(columnspan=3, row=0, sticky="EW")
+                self.items_products.grid(columnspan=4, row=0, sticky="EW")
                 len_products_to_shopping_list +=1
 
         if len_products_to_shopping_list == 0:
@@ -114,57 +120,42 @@ class ShoppingList(ttk.Frame):
                 style="title.TLabel",
                 width=40,
             )
-            self.no_shopping_list.grid(columnspan=3, row=0, sticky="EW")
+            self.no_shopping_list.grid(columnspan=4, row=0, sticky="EW")
 
     def name_column_shopping_list(self):
 
         for x in self.all_db_pantry:
             if x[4] > x[3]:
 
-                self.description_button = ttk.Label(
+
+                self.first_kolumn_list_b = ttk.Label(
                     self.title_column_end_action,
-                    text="Czy chcesz wydrukować listę zaków ?  ",
-                    style="background.TLabel",
-                    padding=(0,7,0,7)
+                    text="Zaznacz",
+                    style="column.TLabel",
                 )
-
-                self.buttom_print = ttk.Button(
-                    self.title_column_end_action,
-                    text="Drukuj listę zakupów",
-                    style="button.TButton",
-
-
-                )
-                self.buttom_print.configure(command=self.pritnt_list)
 
                 self.first_kolumn_list = ttk.Label(
-                    self.shoping_is_dane,
+                    self.title_column_end_action,
                     text="Produkt",
                     style="column.TLabel",
-                    width=20,
-
                 )
 
                 self.second_kolumn_list = ttk.Label(
-                    self.shoping_is_dane,
+                    self.title_column_end_action,
                     text="Jednostka",
                     style="column.TLabel",
-                    width=10,
-
                 )
 
                 self.third_kolumn_list = ttk.Label(
-                    self.shoping_is_dane,
+                    self.title_column_end_action,
                     text="Ilość",
                     style="column.TLabel",
-                    width=15,
-
                 )
-                self.description_button.grid(columnspan=2, row=1, sticky="w")
-                self.buttom_print.grid(column=2, row=1, sticky="e")
-                self.first_kolumn_list.grid(column=0, row=2)
-                self.second_kolumn_list.grid(column=1, row=2)
-                self.third_kolumn_list.grid(column=2, row=2)
+
+                self.first_kolumn_list_b.grid(column=0, row=2, sticky="EW")
+                self.first_kolumn_list.grid(column=1, row=2, sticky="EW")
+                self.second_kolumn_list.grid(column=2, row=2, sticky="EW")
+                self.third_kolumn_list.grid(column=3, row=2, sticky="EW")
 
     def interactive_shoppnig_list(self):
         shopping_list_to_do = open('shopping_list.txt', 'w')
@@ -175,33 +166,54 @@ class ShoppingList(ttk.Frame):
         num10 = 25
         for x in self.all_db_pantry:
 
+            self.selected_option = tk.IntVar(value=None)
+            self.testing_chack_buttom = tk.Checkbutton(
+                self.scrollable_frame,
+                variable=self.selected_option,
+                onvalue=1,
+                offvalue=0,
+                background=colour_label_verse,
+                relief="flat",
+                width=20,
+
+                )
+
             self.name_product_label = ttk.Label(
                 self.scrollable_frame,
                 text=x[1],
                 style="verse.TLabel",
-                width=20,
+                width=15,
             )
 
             self.unit_of_measure = ttk.Label(
                 self.scrollable_frame,
                 text=x[2],
                 style="verse.TLabel",
-                width=10,
+                width=20,
             )
 
-            self.spin_box = ttk.Label(
+            self.quantity_items = tk.IntVar(value=x[4] - x[3])
+            self.spin_box = tk.Spinbox(
                 self.scrollable_frame,
-                text=x[4] - x[3],
-                style="verse.TLabel",
-                width=10,
-                anchor=CENTER,
+                width=5,
+                from_=0,
+                to=30,
+                textvariable=self.quantity_items,
+                justify="center",
+                font=("Ink Free", 13),
+                background=colour_board,
+                foreground=colour_letter_board,
+                relief="flat",
             )
 
             if x[4] > x[3]:
+                self.testing_chack_buttom.grid(column=0, row=num10)
+                self.name_product_label.grid(column=1, row=num10)
+                self.unit_of_measure.grid(column=2, row=num10)
+                self.spin_box.grid(column=3, row=num10)
 
-                self.name_product_label.grid(column=0, row=num10)
-                self.unit_of_measure.grid(column=1, row=num10)
-                self.spin_box.grid(column=2, row=num10)
+            self.list_spin_box_botton[x[1]] = self.quantity_items
+            self.list_chack_box_botton[x[1]] = self.selected_option
 
             num10 += 1
             if x[4] > x[3]:
@@ -254,13 +266,21 @@ class ShoppingList(ttk.Frame):
 
         self.printing_a_completed_shopping_list()
         self.shop_list_window.destroy()
-        self.pantry_db.close()
-        self.done_load_db()
-        self.scroll_bar_canvas()
-        self.main_frame_title_shopping_list()
-        self.name_column_shopping_list()
-        self.interactive_shoppnig_list()
 
+    def selection_list_approval_button(self):
+        for x in self.all_db_pantry:
+            if x[4] > x[3]:
+
+                self.action_buttom = ttk.Button(
+                    self.shoping_is_dane,
+                    text=f"Zakupy do spiżarni",
+                    style="button.TButton",
+                )
+
+                self.action_buttom.configure(command=self.chack_box_print_list)
+                self.action_buttom.grid(column=0, row=0, pady=7)
+
+                break
 
     def printing_a_completed_shopping_list(self):
 

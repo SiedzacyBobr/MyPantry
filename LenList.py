@@ -16,3 +16,7 @@ name_all_pantry = []
 
 for index, name in enumerate(all_db_pantry):
     name_all_pantry.append(name[1])
+
+
+# for i in name_all_pantry:
+#     print(type(i), i)

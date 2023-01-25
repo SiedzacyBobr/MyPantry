@@ -1,21 +1,33 @@
 import tkinter as tk
-from tkinter import ttk, N, S, E, NS, CENTER
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
-from LenList import name_all_pantry
-from Style_constrakt import colour_label_column, colour_label_span, colour_paper_hand, colour_char_hand
+from Style_constrakt import *
 
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
-pantry_cursor.execute("select * from mypantry.products_items")
-all_db_pantry = pantry_cursor.fetchall()
+pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product, "
+                           "products_items.unit_of_measure, products_items.quantity, "
+                           "products_items.seftystock, kategorie.kategoria"
+                           " FROM products_items"
+                           " JOIN kategorie"
+                           " ON products_items.id_kategorie = kategorie.id")
 
+all_db_pantry = pantry_cursor.fetchall()
 
 pantry_cursor.execute("SELECT kategoria"
                       " FROM mypantry.kategorie"
                       " WHERE kategoria != 'całość'")
 all_category = pantry_cursor.fetchall()
+
+name_all_pantry = []
+pantry_cursor.execute("SELECT name_product"
+                      " FROM mypantry.products_items"
+                      )
+name_testing = pantry_cursor.fetchall()
+
+for i in name_testing:
+    name_all_pantry.append(i[0])
 
 
 class Editing_action_product(ttk.Frame):
@@ -28,9 +40,8 @@ class Editing_action_product(ttk.Frame):
 
         self.editing_conteiner_frame = tk.Frame(
             self,
-            background=colour_label_span,
-            borderwidth=1,
-            relief="solid",
+            background=colour_background,
+            relief="flat",
             padx=10,
             pady=10,
         )
@@ -39,18 +50,20 @@ class Editing_action_product(ttk.Frame):
         self.title_editing_freme = ttk.Label(
             self.editing_conteiner_frame,
             text="Wybór produktu do edycji",
-            style="Title_on_add_del_edit.TLabel",
-            borderwidth=2,
-            relief="solid",
+            style="title.TLabel",
+            relief="flat",
             width=46,
         )
 
         self.name_all_product = name_all_pantry
 
+        # for i in self.name_all_product:
+        #     print(type(i), i )
+
         self.name_product = ttk.Label(
             self.editing_conteiner_frame,
-            text="Produkt do zedytowania: ",
-            style="Comment_on_add_del_edit.TLabel",
+            text="Produkt do edycji: ",
+            style="background.TLabel",
         )
 
         self.product = tk.StringVar()
@@ -58,11 +71,11 @@ class Editing_action_product(ttk.Frame):
             self.editing_conteiner_frame,
             values=self.name_all_product,
             textvariable=self.product,
-            font=("Courier New", 15),
+            font=("Courier New", 13),
             justify="center",
-            background=colour_paper_hand,
-            borderwidth=2,
-            relief="sunken",
+            background=colour_board,
+            relief="flat",
+            width=20,
         )
 
 #relief: "flat", "raised","sunken","groove", "ridge".
@@ -70,15 +83,15 @@ class Editing_action_product(ttk.Frame):
 
         self.editing_buttom = ttk.Button(
             self.editing_conteiner_frame,
-            text="Edytowanie produktu",
-            style="Buttom_on_add_del_edit.TButton",
+            text="Edytuj",
+            style="button.TButton",
             command=self.edit_product_in_my_pantry,
         )
 
-        self.title_editing_freme.grid(columnspan=2, row=0, sticky="EW")
-        self.name_product.grid(column=0, row=1, sticky="ew")
-        self.product_select.grid(column=1, row=1,)
-        self.editing_buttom.grid(columnspan=2, row=2, sticky="EW")
+        self.title_editing_freme.grid(columnspan=3, row=0, sticky="EW")
+        self.name_product.grid(column=0, row=1, )
+        self.product_select.grid(column=1, row=1, )
+        self.editing_buttom.grid(column=2, row=1, sticky="e" )
 
     def edit_product_in_my_pantry(self,):
 
@@ -90,12 +103,13 @@ class Editing_action_product(ttk.Frame):
         self.title_editing_freme = ttk.Label(
             self.editing_conteiner_frame,
             text="Edytewanie wybronego produktu w spiżarni",
-            style="Title_on_add_del_edit.TLabel",
+            style="title.TLabel",
         )
 
         self.product_to_edit = self.product.get()
 
         for index, x in enumerate(all_db_pantry):
+
 
             if x[1] == self.product_to_edit:
 
@@ -104,84 +118,76 @@ class Editing_action_product(ttk.Frame):
                 self.unit_to_edit = tk.StringVar(value=x[2])
                 self.qty_to_edit = tk.IntVar(value=x[3])
                 self.sefty_to_edit = tk.IntVar(value=x[4])
-                self.selected_category = tk.StringVar()
+                self.selected_category= tk.StringVar()
 
                 self.name_Label = ttk.Label(
                     self.editing_conteiner_frame,
                     text="nazwa:",
-                    style="Comment_on_add_del_edit.TLabel",
+                    style="background.TLabel",
                 )
                 self.unit_Label = ttk.Label(
                     self.editing_conteiner_frame,
                     text="jednostka:",
-                    style="Comment_on_add_del_edit.TLabel",
+                    style="background.TLabel",
                 )
                 self.qty_Label = ttk.Label(
                     self.editing_conteiner_frame,
                     text="ilość:",
-                    style="Comment_on_add_del_edit.TLabel",
+                    style="background.TLabel",
                 )
                 self.sefty_Label = ttk.Label(
                     self.editing_conteiner_frame,
                     text="żelazny zapas:",
-                    style="Comment_on_add_del_edit.TLabel",
+                    style="background.TLabel",
                 )
                 self.category_label = ttk.Label(
                     self.editing_conteiner_frame,
                     text="kategoria:",
-                    style="Comment_on_add_del_edit.TLabel",
+                    style="background.TLabel",
                 )
 
                 self.dystans = ttk.Label(
                     self.editing_conteiner_frame,
                     text=" ",
-                    style="Comment_on_add_del_edit.TLabel",
+                    style="background.TLabel",
                 )
 
                 self.name_editing = tk.Entry(
                     self.editing_conteiner_frame,
                     textvariable=self.name_to_edit,
-                    background=colour_paper_hand,
-                    #width=20,
+                    background=colour_board,
                     justify="center",
                     font=("Ink Free", 13),
-                    borderwidth=2,
-                    relief="sunken",
-                    foreground=colour_char_hand,
+                    relief="flat",
+                    foreground=colour_letter_board
                 )
 
                 self.unit_editing = tk.Entry(
                     self.editing_conteiner_frame,
                     textvariable=self.unit_to_edit,
-                    background=colour_paper_hand,
-                    # width=7,
+                    background=colour_board,
                     justify="center",
                     font=("Ink Free", 13),
-                    borderwidth=2,
-                    relief="sunken",
-                    foreground=colour_char_hand,
+                    relief="flat",
+                    foreground=colour_letter_board,
                 )
                 self.qty_editing = tk.Entry(
                     self.editing_conteiner_frame,
                     textvariable=self.qty_to_edit,
-                    background=colour_paper_hand,
-                    # width=5,
+                    background=colour_board,
                     justify="center",
                     font=("Ink Free", 13),
-                    borderwidth=2,
-                    relief="sunken",
-                    foreground=colour_char_hand,
+                    relief="flat",
+                    foreground=colour_letter_board,
                 )
                 self.sefty_editing = tk.Entry(
                     self.editing_conteiner_frame,
                     textvariable=self.sefty_to_edit,
-                    background=colour_paper_hand,
-                    # width=5,
+                    background=colour_board,
                     justify="center",
                     font=("Ink Free", 13),
-                    borderwidth=2,
-                    relief="sunken",
-                    foreground=colour_char_hand,
+                    relief="flat",
+                    foreground=colour_letter_board,
                 )
 
                 self.category_entry = tk.Spinbox(
@@ -189,15 +195,17 @@ class Editing_action_product(ttk.Frame):
                     values=all_category,
                     textvariable=self.selected_category,
                     font=('Ink Free', 13),
-                    borderwidth=2,
-                    relief="sunken",
+                    relief="flat",
                     justify="center",
+                    background=colour_board,
+                    wrap=True,
                 )
+                self.selected_category.set(x[5])
 
                 self.editing_buttom_all = ttk.Button(
                     self.editing_conteiner_frame,
                     text="Edytowanie produktu",
-                    style="Buttom_on_add_del_edit.TButton",
+                    style="button.TButton",
                     command=self.editing_all,
                 )
                 # self.editing_buttom_all.bind("<Return>", self.editing_all)
@@ -269,14 +277,14 @@ class Editing_action_product(ttk.Frame):
         self.title_editing_freme = ttk.Label(
             self.editing_conteiner_frame,
             text="Wybór produktu do edycji",
-            style="Title_on_add_del_edit.TLabel",
+            style="title.TLabel",
             width=46,
         )
 
         self.masage_label = ttk.Label(
             self.editing_conteiner_frame,
             text=f' Produkt: {self.name} - został zedytowany',
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
         self.title_editing_freme.grid(column=0, row=0)
         self.masage_label.grid(column=0, row=1)

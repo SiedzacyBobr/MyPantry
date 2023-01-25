@@ -1,8 +1,7 @@
 import tkinter as tk
-from tkinter import ttk, N, S, E, NS, CENTER
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
-from Style_constrakt import colour_label_column, colour_label_span, colour_paper_hand, colour_char_hand
+from Style_constrakt import *
 
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
@@ -22,9 +21,9 @@ class Adding_action_product(ttk.Frame):
 
         self.addding_conteiner_frame = tk.Frame(
             self,
-            background=colour_label_span,
-            borderwidth=1,
-            relief="solid",
+            background=colour_background,
+            # borderwidth=2,
+            relief="flat",
             padx=10,
             pady=10,
         )
@@ -33,82 +32,82 @@ class Adding_action_product(ttk.Frame):
         self.title_addding_frame = ttk.Label(
             self.addding_conteiner_frame,
             text="Okienko do dodawania produktów do spiżarni",
-            style="Title_on_add_del_edit.TLabel",
-            borderwidth=2,
-            relief="solid",
+            style="title.TLabel",
+            # borderwidth=2,
+            relief="flat",
             width=46,
         )
 
         self.name_Label = ttk.Label(
             self.addding_conteiner_frame,
             text="nazwa:",
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
         self.unit_Label = ttk.Label(
             self.addding_conteiner_frame,
             text="jednostka:",
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
         self.qty_Label = ttk.Label(
             self.addding_conteiner_frame,
             text="ilość:",
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
         self.sefty_Label = ttk.Label(
             self.addding_conteiner_frame,
             text="żelazny zapas:",
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
         self.category_label = ttk.Label(
             self.addding_conteiner_frame,
             text="kategoria:",
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
         self.dystans = ttk.Label(
             self.addding_conteiner_frame,
             text=" ",
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
 
         self.name_Entry = tk.Entry(
             self.addding_conteiner_frame,
-            background=colour_paper_hand,
+            background=colour_board,
             width=20,
             justify="center",
             font=("Ink Free", 13),
-            borderwidth=2,
-            relief="sunken",
-            foreground=colour_char_hand,
+            # borderwidth=2,
+            relief="flat",
+            foreground=colour_letter_board,
         )
 
         self.unit_Entry = tk.Entry(
             self.addding_conteiner_frame,
-            background=colour_paper_hand,
+            background=colour_board,
             justify="center",
             font=("Ink Free", 13),
-            borderwidth=2,
-            relief="sunken",
-            foreground=colour_char_hand,
+            # borderwidth=2,
+            relief="flat",
+            foreground=colour_letter_board,
         )
 
         self.qty_Entry = tk.Entry(
             self.addding_conteiner_frame,
-            background=colour_paper_hand,
+            background=colour_board,
             justify="center",
             font=("Ink Free", 13),
-            borderwidth=2,
-            relief="sunken",
-            foreground=colour_char_hand,
+            # borderwidth=2,
+            relief="flat",
+            foreground=colour_letter_board,
         )
 
         self.sefty_Entry = tk.Entry(
             self.addding_conteiner_frame,
-            background=colour_paper_hand,
+            background=colour_board,
             justify="center",
             font=("Ink Free", 13),
-            borderwidth=2,
-            relief="sunken",
-            foreground=colour_char_hand,
+            #borderwidth=2,
+            relief="flat",
+            foreground=colour_letter_board,
         )
 
         self.selected_category = tk.StringVar()
@@ -117,15 +116,15 @@ class Adding_action_product(ttk.Frame):
             values=all_kategoria,
             textvariable=self.selected_category,
             font=('Ink Free', 13),
-            borderwidth=2,
-            relief="sunken",
+            background=colour_board,
+            relief="flat",
             justify="center",
         )
         self.insert_buttom = ttk.Button(
             self.addding_conteiner_frame,
-            text="dodaj do mojej spiżarni",
+            text="Dodaj",
             command=self.action_add_product,
-            style="Buttom_on_add_del_edit.TButton",
+            style="button.TButton",
         )
 
         self.title_addding_frame.grid(columnspan=2, row=0, sticky="ew")
@@ -140,7 +139,7 @@ class Adding_action_product(ttk.Frame):
         self.category_label.grid(column=0, row=5, sticky="e")
         self.category_Entry.grid(column=1, row=5, sticky="ew")
         self.dystans.grid(column=0, row=6)
-        self.insert_buttom.grid(columnspan=2, row=7, sticky="EW")
+        self.insert_buttom.grid(column=1, row=7, sticky="E")
 
     def action_add_product(self):
 
@@ -166,10 +165,23 @@ class Adding_action_product(ttk.Frame):
 
         pantry_db.commit()
 
+        self.name_Label.destroy()
+        self.name_Entry.destroy()
+        self.unit_Label.destroy()
+        self.unit_Entry.destroy()
+        self.qty_Label.destroy()
+        self.qty_Entry.destroy()
+        self.sefty_Label.destroy()
+        self.sefty_Entry.destroy()
+        self.category_label.destroy()
+        self.category_Entry.destroy()
+        self.dystans.destroy()
+        self.insert_buttom.destroy()
+
         self.masage_label = ttk.Label(
             self.addding_conteiner_frame,
             text=f' Produkt: {self.name} - został dodany do spiżarni',
-            style="Comment_on_add_del_edit.TLabel",
+            style="background.TLabel",
         )
         self.masage_label.grid(columnspan=9, row=3)
 

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import mysql.connector
 from lokalhost_entry import passwd, user_pantry
-from Style_constrakt import colour_label_span, colour_char_hand, colour_paper_hand
+from Style_constrakt import colour_label_verse, colour_background, colour_board, colour_letter_board
 
 class PantryShelvesClass(ttk.Frame):
     def __init__(self, container, *args, **kwargs,):
@@ -14,35 +14,45 @@ class PantryShelvesClass(ttk.Frame):
         self.set_kategorii = set()
         self.number_of_views = 0
 
+        #======================= główny frame skład ========================================
+
         self.product = tk.Frame(
             self,
-            background=colour_label_span,
-            width=691,
+            background=colour_background,
+            width=700,
             height=450,
-            borderwidth=1,
-            relief="solid",
             padx=10,
             pady=10,
         )
+
+        self.select_a_category_to_display = tk.Frame(
+            self.product,
+            background=colour_background,
+        )
+
+        self.list_being_printed = tk.Frame(
+            self.product,
+            background=colour_board,
+        )
+
+        self.Pantry_replenishment = tk.Frame(
+            self.product,
+            background=colour_background
+        )
+
         self.product.pack()
         self.product.pack_propagate(0)
+        self.select_a_category_to_display.grid(column=0, row=0)
+        self.list_being_printed.grid(column=0, row=1)
+        self.Pantry_replenishment.grid(column=0, row=2)
 
-        self.select_a_category_to_display = tk.Frame(self.product)
-        self.select_a_category_to_display.pack()
-
-        self.list_being_printed = tk.Frame(self.product)
-        self.list_being_printed.pack()
+        # ==================================== uruchamianie poszczególnych elemnótów składowachy ===================
 
         self.done_load_db()
-        self.generating_a_selection_list()
         self.scroll_bar_canvas()
         self.main_frame_title_shelves()
         self.shelf_column_name()
         self.list_ingradients_approval_button()
-
-    def generating_a_selection_list(self):
-        self.list_being_printed = tk.Frame(self.product)
-        self.list_being_printed.pack()
 
     def done_load_db(self):
 
@@ -71,13 +81,13 @@ class PantryShelvesClass(ttk.Frame):
     def scroll_bar_canvas(self):
         self.canvas_test = tk.Canvas(
             self.list_being_printed,
-            background=colour_label_span,
-            width=618,
+            background=colour_label_verse,
+            width=630,
         )
 
         self.scrollable_frame = tk.Frame(
             self.canvas_test,
-            background=colour_label_span,
+            background=colour_label_verse,
             width=618,
         )
 
@@ -102,17 +112,16 @@ class PantryShelvesClass(ttk.Frame):
         self.shelf = ttk.Label(
             self.select_a_category_to_display,
             text="Stan Spiżarni",
-            style="titile_frame_os.TLabel",
-            borderwidth=2,
-            relief="solid",
-            width=45,
+            style="title.TLabel",
+            width=40,
         )
         # relief: "flat", "raised","sunken","groove", "ridge".
 
         self.kategoria = ttk.Label(
             self.select_a_category_to_display,
             text="wybór kategorii: ",
-            style="span_style_os.TLabel",
+            style="background.TLabel",
+            padding=7
         )
 
         self.selected_category = tk.StringVar()
@@ -120,53 +129,52 @@ class PantryShelvesClass(ttk.Frame):
             self.select_a_category_to_display,
             values=self.category_list,
             textvariable=self.selected_category,
-            font=("Courier New", 15),
+            font=("Courier New", 13),
             justify="center",
-            background=colour_paper_hand,
-            borderwidth=2,
-            relief="sunken",
+            background=colour_board,
+            relief="flat",
             width=10,
         )
 
         self.button_choise = ttk.Button(
             self.select_a_category_to_display,
-            style="Button_style_os.TButton",
+            style="button.TButton",
             text="Pokaż",
             command=self.interactive_shelves_in_the_pantry,
         )
 
         self.shelf.grid(columnspan=4, row=0, sticky="EW")
-        self.kategoria.grid(columnspan=2, row=1, sticky="ew")
-        self.product_select.grid(column=2, row=1)
-        self.button_choise.grid(column=3, row=1)
+        self.kategoria.grid(columnspan=2, row=1, sticky="e")
+        self.product_select.grid(column=2, row=1, sticky="w")
+        self.button_choise.grid(column=3, row=1, sticky="e")
 
     def shelf_column_name(self):
 
         self.first_kolumn = ttk.Label(
             self.select_a_category_to_display,
             text="Produktu",
-            style="column_style_os.TLabel",
+            style="column.TLabel",
             width=15,
         )
 
         self.second_kolumn = ttk.Label(
             self.select_a_category_to_display,
             text="Stan",
-            style="column_style_os.TLabel",
+            style="column.TLabel",
             width=7,
         )
 
         self.third_kolumn = ttk.Label(
             self.select_a_category_to_display,
             text="Jednostka",
-            style="column_style_os.TLabel",
+            style="column.TLabel",
             width=10,
         )
 
         self.fourth_kolumn = ttk.Label(
             self.select_a_category_to_display,
             text="ile szt.?",
-            style="column_style_os.TLabel",
+            style="column.TLabel",
             width=10,
         )
 
@@ -180,13 +188,13 @@ class PantryShelvesClass(ttk.Frame):
         self.button_choise["text"] = "Wyczyść"
 
         if self.number_of_views > 0:
-            self.list_being_printed.destroy()
+            self.canvas_test.destroy()
+            self.scrollable_frame.destroy()
 
-            self.generating_a_selection_list()
             self.scroll_bar_canvas()
-            self.main_frame_title_shelves()
-            self.shelf_column_name()
+
             self.number_of_views = 0
+            self.button_choise["text"] = "Pokaż"
 
         else:
 
@@ -225,21 +233,21 @@ class PantryShelvesClass(ttk.Frame):
                 self.article = ttk.Label(
                     self.scrollable_frame,
                     text=self.article_name,
-                    style="span_style_os.TLabel",
+                    style="verse.TLabel",
                     width=20,
                 )
 
                 self.article_status = ttk.Label(
                     self.scrollable_frame,
                     text=self.availability,
-                    style="span_style_os.TLabel",
+                    style="verse.TLabel",
                     width=11,
                 )
 
                 self.article_unit_measure = ttk.Label(
                     self.scrollable_frame,
                     text=self.unit_of_measure,
-                    style="span_style_os.TLabel",
+                    style="verse.TLabel",
                     width=16,
                 )
 
@@ -250,12 +258,12 @@ class PantryShelvesClass(ttk.Frame):
                     from_=0,
                     to=x[3],
                     justify="center",
-                    font=("Ink Free", 15),
-                    foreground=colour_char_hand,
-                    background=colour_paper_hand,
-                    borderwidth=2,
-                    relief="sunken",
+                    font=("Ink Free", 13),
+                    background=colour_board,
+                    foreground=colour_letter_board,
+                    relief="flat",
                     textvariable=self.new_quantity_article,
+
                 )
 
                 self.article.grid(column=0, row=num1)
@@ -270,11 +278,11 @@ class PantryShelvesClass(ttk.Frame):
 
     def list_ingradients_approval_button(self):
         self.one_buttom = ttk.Button(
-            self.product,
-            text="spiżarnia ==> kuchnia",
-            style="Button_style_os.TButton",
+            self.Pantry_replenishment,
+            text="Uzupełnij",
+            style="button.TButton",
         )
-        self.one_buttom.pack(side="bottom", fill="x")
+        self.one_buttom.pack(side="top", ipadx=20, pady=5)
         self.one_buttom.configure(command=self.pantry_status_update, )
 
     def pantry_status_update(self):
@@ -307,12 +315,6 @@ class PantryShelvesClass(ttk.Frame):
         self.pantry_db.close()
         self.product.destroy()
 
-        self.done_load_db()
-        self.scroll_bar_canvas()
-        self.main_frame_title_shelves()
-        self.shelf_column_name()
-        self.interactive_shelves_in_the_pantry()
-        self.list_ingradients_approval_button()
 
     def list_products_transferred(self):
 
@@ -321,9 +323,7 @@ class PantryShelvesClass(ttk.Frame):
 
         self.list_freme_transferred = tk.Frame(
             self.top_winodw,
-            background=colour_paper_hand,
-            borderwidth=1,
-            relief="solid",
+            background=colour_label_verse,
             padx=20,
         )
         self.list_freme_transferred.grid(column=2, row=0)
@@ -331,20 +331,20 @@ class PantryShelvesClass(ttk.Frame):
         self.title_list = ttk.Label(
             self.list_freme_transferred,
             text="Przeniesione z Spiżarni do Kuchni",
-            style="titile_frame_handwritten.TLabel",
+            style="title.TLabel",
             width=45
         )
 
         self.title_column_name = ttk.Label(
             self.list_freme_transferred,
             text="Nazwa produktu",
-            style="column_style_handwritten.TLabel",
+            style="column.TLabel",
         )
 
         self.title_column_valeu = ttk.Label(
             self.list_freme_transferred,
             text="Ilość szt.",
-            style="column_style_handwritten.TLabel",
+            style="column.TLabel",
         )
         self.title_list.grid(columnspan=2, row=0)
         self.title_column_name.grid(column=0, row=1, sticky="ew")
@@ -356,13 +356,13 @@ class PantryShelvesClass(ttk.Frame):
             self.row_name = ttk.Label(
                 self.list_freme_transferred,
                 text=name,
-                style="span_style_handwritten.TLabel",
+                style="verse.TLabel",
             )
 
             self.row_value = ttk.Label(
                 self.list_freme_transferred,
                 text=f'{valu} szt.',
-                style="span_style_handwritten.TLabel",
+                style="verse.TLabel",
             )
 
             self.row_name.grid(column=0, row=num3)

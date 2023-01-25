@@ -15,3 +15,5 @@ test_static_frem_size.py
 shopping_list.txt
 test_printer.py
 test_stale_srawdzanie.py
+test_spinbox.py
+Product_class.py
