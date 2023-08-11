@@ -7,7 +7,7 @@ from Style_constrakt import *
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
-pantry_cursor.execute("select * from mypantry.products_items")
+pantry_cursor.execute("select * from mypantry.home_pantry_products")
 all_db_pantry = pantry_cursor.fetchall()
 
 
@@ -86,5 +86,5 @@ class Delete_action_product(ttk.Frame):
         self.product_to_delete = self.product.get()
 
         pantry_cursor.execute(
-            f"DELETE FROM mypantry.products_items WHERE name_product='{self.product_to_delete}'")
+            f"DELETE FROM mypantry.home_pantry_products WHERE name='{self.product_to_delete}'")
         pantry_db.commit()

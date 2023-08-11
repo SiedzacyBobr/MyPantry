@@ -24,17 +24,17 @@ class Products():
     def adding_to_the_pantry(self):
 
         self.pantry_cursor.execute(
-            f"INSERT INTO mypantry.kategorie (kategoria) "
-            f"select * from (select '{self.category}' as kategoria) as new_value "
-            f"where not exists (select kategoria from mypantry.kategorie where kategoria = '{self.category}') limit 1"
+            f"INSERT INTO mypantry.home_pantry_kategoria (name) "
+            f"select * from (select '{self.category}' as name) as new_value "
+            f"where not exists (select name from mypantry.home_pantry_kategoria where name = '{self.category}') limit 1"
         )
         self.pantry_db.commit()
 
         self.pantry_cursor.execute(
-            f"INSERT INTO mypantry.products_items"
-            f" (name_product, unit_of_measure, quantity, seftystock, id_kategorie)"
+            f"INSERT INTO mypantry.home_pantry_products"
+            f" (name, unit, quty, sefty, category_id)"
             f" VALUES ( '{self.name_product}','{self.unit_of_measure}', {self.quantity} , {self.safestock},"
-            f" (select id from mypantry.kategorie where kategoria = '{self.category}'))"
+            f" (select id from mypantry.home_pantry_kategoria where name = '{self.category}'))"
         )
         self.pantry_db.commit()
 

@@ -64,18 +64,17 @@ class PantryShelvesClass(ttk.Frame):
         )
         self.pantry_cursor = self.pantry_db.cursor()
 
-        self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product, "
-                                   "products_items.unit_of_measure, products_items.quantity, "
-                                   "products_items.seftystock, kategorie.kategoria"
-                                   " FROM products_items"
-                                   " JOIN kategorie"
-                                   " ON products_items.id_kategorie = kategorie.id")
+        self.pantry_cursor.execute(f"SELECT mypantry.home_pantry_products.id, mypantry.home_pantry_products.name, mypantry.home_pantry_products.unit," 
+                                       " mypantry.home_pantry_products.quty, mypantry.home_pantry_products.sefty, mypantry.home_pantry_kategoria.cate "
+                                       " FROM mypantry.home_pantry_products "
+                                       " JOIN mypantry.home_pantry_kategoria "
+                                       " ON mypantry.home_pantry_products.category_id = mypantry.home_pantry_kategoria.id")
 
         self.all_db_pantry = self.pantry_cursor.fetchall()
 
-        self.pantry_cursor.execute("SELECT kategoria"
-                                   " FROM mypantry.kategorie"
-                                   " WHERE kategoria != 'nowa'")
+        self.pantry_cursor.execute("SELECT cate"
+                                   " FROM mypantry.home_pantry_kategoria"
+                                   " WHERE cate != 'nowa'")
         self.category_list = self.pantry_cursor.fetchall()
 
     def scroll_bar_canvas(self):
@@ -202,23 +201,23 @@ class PantryShelvesClass(ttk.Frame):
             sort = self.selected_category.get()
 
             if sort == "całość":
-                self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
-                                           f" products_items.unit_of_measure, products_items.quantity,"
-                                           f" products_items.seftystock"
-                                           f" FROM products_items"
-                                           f" ORDER BY name_product")
+                self.pantry_cursor.execute(f"SELECT mypantry.home_pantry_products.id, mypantry.home_pantry_products.name,"
+                                           f" mypantry.home_pantry_products.unit, mypantry.home_pantry_products.quty,"
+                                           f" mypantry.home_pantry_products.sefty"
+                                           f" FROM mypantry.home_pantry_products"
+                                           f" ORDER BY name")
                 self.product_list_by_category = self.pantry_cursor.fetchall()
 
             else:
 
-                self.pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product,"
-                                           f" products_items.unit_of_measure, products_items.quantity,"
-                                           f" products_items.seftystock"
-                                           f" FROM products_items"
-                                           f" WHERE id_kategorie = (select kategorie.id"
-                                           f" FROM kategorie"
-                                           f" WHERE kategoria = '{sort}')"
-                                           f" ORDER BY name_product")
+                self.pantry_cursor.execute(f"SELECT mypantry.home_pantry_products.id, mypantry.home_pantry_products.name,"
+                                           f" mypantry.home_pantry_products.unit, mypantry.home_pantry_products.quty,"
+                                           f" mypantry.home_pantry_products.sefty"
+                                           f" FROM mypantry.home_pantry_products"
+                                           f" WHERE category_id = (select mypantry.home_pantry_kategoria.id"
+                                           f" FROM mypantry.home_pantry_kategoria"
+                                           f" WHERE cate = '{sort}')"
+                                           f" ORDER BY name")
 
                 self.product_list_by_category = self.pantry_cursor.fetchall()
 

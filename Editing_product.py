@@ -6,23 +6,23 @@ from Style_constrakt import *
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
-pantry_cursor.execute(f"SELECT products_items.id, products_items.name_product, "
-                           "products_items.unit_of_measure, products_items.quantity, "
-                           "products_items.seftystock, kategorie.kategoria"
-                           " FROM products_items"
-                           " JOIN kategorie"
-                           " ON products_items.id_kategorie = kategorie.id")
+pantry_cursor.execute(f"SELECT mypantry.home_pantry_products.id, mypantry.home_pantry_products.name, "
+                           "mypantry.home_pantry_products.unit, mypantry.home_pantry_products.quty, "
+                           "mypantry.home_pantry_products.sefty, mypantry.home_pantry_kategoria.cate"
+                           " FROM mypantry.home_pantry_products"
+                           " JOIN mypantry.home_pantry_kategoria"
+                           " ON mypantry.home_pantry_products.category_id = mypantry.home_pantry_kategoria.id")
 
 all_db_pantry = pantry_cursor.fetchall()
 
-pantry_cursor.execute("SELECT kategoria"
-                      " FROM mypantry.kategorie"
-                      " WHERE kategoria != 'całość'")
+pantry_cursor.execute("SELECT cate"
+                      " FROM mypantry.home_pantry_kategoria"
+                      " WHERE cate != 'całość'")
 all_category = pantry_cursor.fetchall()
 
 name_all_pantry = []
-pantry_cursor.execute("SELECT name_product"
-                      " FROM mypantry.products_items"
+pantry_cursor.execute("SELECT name"
+                      " FROM mypantry.home_pantry_products"
                       )
 name_testing = pantry_cursor.fetchall()
 
@@ -250,27 +250,27 @@ class Editing_action_product(ttk.Frame):
         self.kate = self.selected_category.get()
 
         pantry_cursor.execute(
-            f"UPDATE mypantry.products_items SET name_product = '{self.name}' WHERE id = {self.id}"
+            f"UPDATE mypantry.home_pantry_products SET name = '{self.name}' WHERE id = {self.id}"
         )
         pantry_db.commit()
 
         pantry_cursor.execute(
-            f"UPDATE mypantry.products_items SET unit_of_measure = '{self.unit}' WHERE id = {self.id}"
+            f"UPDATE mypantry.home_pantry_products SET unit = '{self.unit}' WHERE id = {self.id}"
         )
         pantry_db.commit()
 
         pantry_cursor.execute(
-            f"UPDATE mypantry.products_items SET quantity= {int(self.qty)} WHERE id = {self.id}"
+            f"UPDATE mypantry.home_pantry_products SET quty= {int(self.qty)} WHERE id = {self.id}"
         )
         pantry_db.commit()
 
         pantry_cursor.execute(
-            f"UPDATE mypantry.products_items SET seftystock= {int(self.sefty)} WHERE id = {self.id}"
+            f"UPDATE mypantry.home_pantry_products SET sefty= {int(self.sefty)} WHERE id = {self.id}"
         )
         pantry_db.commit()
 
         pantry_cursor.execute(
-            f"UPDATE mypantry.products_items SET id_kategorie= (select id from mypantry.kategorie where kategoria = '{self.kate}') WHERE id = {self.id}"
+            f"UPDATE mypantry.home_pantry_products SET category_id = (select id from mypantry.home_pantry_kategoria where cate = '{self.kate}') WHERE id = {self.id}"
         )
         pantry_db.commit()
 

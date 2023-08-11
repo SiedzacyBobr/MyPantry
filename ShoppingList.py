@@ -60,7 +60,7 @@ class ShoppingList(ttk.Frame):
         )
         self.pantry_cursor = self.pantry_db.cursor()
 
-        self.pantry_cursor.execute("select * from mypantry.products_items")
+        self.pantry_cursor.execute("select * from mypantry.home_pantry_products")
         self.all_db_pantry = self.pantry_cursor.fetchall()
 
 
@@ -246,7 +246,7 @@ class ShoppingList(ttk.Frame):
                                 self.done_schoping[name_s] += self.guantity_s
 
                     self.pantry_cursor.execute(
-                        f"update products_items set quantity = {self.new_state_s} where id ={self.shoping_index}")
+                        f"update home_pantry_products set quantity = {self.new_state_s} where id ={self.shoping_index}")
                     self.pantry_db.commit()
 
             else:

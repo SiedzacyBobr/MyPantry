@@ -6,9 +6,9 @@ from Style_constrakt import *
 pantry_db = mysql.connector.connect(host="localhost", user=user_pantry, passwd=passwd, database="mypantry")
 pantry_cursor = pantry_db.cursor()
 
-pantry_cursor.execute("SELECT kategoria"
-                      " FROM mypantry.kategorie"
-                      " WHERE kategoria != 'całość'")
+pantry_cursor.execute("SELECT cate"
+                      " FROM mypantry.home_pantry_kategoria"
+                      " WHERE cate != 'całość'")
 all_kategoria = pantry_cursor.fetchall()
 
 class Adding_action_product(ttk.Frame):
@@ -150,17 +150,17 @@ class Adding_action_product(ttk.Frame):
         self.kate = self.category_Entry.get()
 
         pantry_cursor.execute(
-            f"INSERT INTO mypantry.kategorie (kategoria) "
-            f"select * from (select '{self.kate}' as kategoria) as new_value "
-            f"where not exists (select kategoria from mypantry.kategorie where kategoria = '{self.kate}') limit 1"
+            f"INSERT INTO mypantry.home_pantry_kategoria (cate) "
+            f"select * from (select '{self.kate}' as cate) as new_value "
+            f"where not exists (select cate from mypantry.home_pantry_kategoria where cate = '{self.kate}') limit 1"
         )
         pantry_db.commit()
 
 
         pantry_cursor.execute(
-            f"INSERT INTO mypantry.products_items"
-            f" (name_product, unit_of_measure, quantity, seftystock, id_kategorie)"
-            f" VALUES ( '{self.name}','{self.unit}', {self.qty} , {self.sefty}, (select id from mypantry.kategorie where kategoria = '{self.kate}'))"
+            f"INSERT INTO mypantry.home_pantry_products"
+            f" (name, unit, quty, sefty, category_id)"
+            f" VALUES ( '{self.name}','{self.unit}', {self.qty} , {self.sefty}, (select id from mypantry.home_pantry_kategoria where cate = '{self.kate}'))"
         )
 
         pantry_db.commit()
